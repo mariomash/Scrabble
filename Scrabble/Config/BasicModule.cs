@@ -22,7 +22,7 @@ namespace Scrabble.Config {
 
         protected BasicModule()
         {
-            Id = new Random().Next(10000000);
+            Id = new Random().Next(100000000);
             Active = false;
         }
 

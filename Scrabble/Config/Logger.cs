@@ -1,18 +1,28 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 
 namespace Scrabble.Config {
     [Serializable]
     public class Logger {
-        public List<LogEntry> LogEntries;
+
+        public ConcurrentDictionary<Guid, LogEntry> LogEntries;
 
         public bool Active;
         public double MaximumLogEntriesInMemory;
         public LogType Threshold;
+
+        public Logger()
+        {
+            Active = false;
+            MaximumLogEntriesInMemory = 1000;
+            Threshold = LogType.Info;
+        }
 
         public void Log(LogType logType, string message, StackTrace stack = null)
         {
@@ -26,12 +36,6 @@ namespace Scrabble.Config {
 
                 if (logType < Threshold) return;
 
-                var logEntriesQueSobran = Convert.ToInt32(LogEntries.Count - MaximumLogEntriesInMemory);
-                if (logEntriesQueSobran > 0)
-                {
-                    LogEntries.RemoveRange(0, logEntriesQueSobran);
-                }
-
                 var logEntry = new LogEntry()
                 {
                     Tipo = logType,
@@ -40,12 +44,48 @@ namespace Scrabble.Config {
                     Timestamp = DateTime.Now
                 };
 
-                LogEntries.Add(logEntry);
+                AddToLogEntries(logEntry);
 
             }
             catch (Exception ex)
             {
-                SaveToLogFile($"{ex.Message} - {ex.StackTrace}");
+                SaveToLogFile($"{LogType.Error} - {ex.Message} - {ex.StackTrace}");
+            }
+        }
+
+        private void AddToLogEntries(LogEntry logEntry)
+        {
+            try
+            {
+
+                var logEntriesQueSobran = Convert.ToInt32(LogEntries.Count - MaximumLogEntriesInMemory);
+                if (logEntriesQueSobran > 0)
+                {
+                    var logEntriesToRemove = LogEntries.OrderBy(l => l.Value.Timestamp).Take(logEntriesQueSobran);
+                    foreach (var logEntryToRemove in logEntriesToRemove)
+                    {
+                        var isRemoved = false;
+                        var guidToRemove = logEntryToRemove.Key;
+                        while (!isRemoved)
+                        {
+                            LogEntry removedEntry;
+                            isRemoved = LogEntries.TryRemove(guidToRemove, out removedEntry) || !LogEntries.ContainsKey(guidToRemove);
+                            Thread.Sleep(TimeSpan.FromMilliseconds(50));
+                        }
+                    }
+                }
+
+                var isAdded = false;
+                while (!isAdded)
+                {
+                    var guid = Guid.NewGuid();
+                    isAdded = LogEntries.TryAdd(guid, logEntry) || LogEntries.ContainsKey(guid);
+                    Thread.Sleep(TimeSpan.FromMilliseconds(50));
+                }
+            }
+            catch
+            {
+                // Ignore
             }
         }
 

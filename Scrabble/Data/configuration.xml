@@ -2,7 +2,7 @@
 <Configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Logger>
     <Active>true</Active>
-    <MaximumLogEntriesInMemory>50</MaximumLogEntriesInMemory>
+    <MaximumLogEntriesInMemory>1000</MaximumLogEntriesInMemory>
     <Threshold>Info</Threshold>
   </Logger>
   <MonitorThread>
