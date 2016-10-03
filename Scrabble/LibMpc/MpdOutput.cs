@@ -32,15 +32,15 @@ namespace Scrabble.LibMpc
         /// <summary>
         /// The id of the output.
         /// </summary>
-        public int Id { get { return this.id; } }
+        public int Id { get { return id; } }
         /// <summary>
         /// The name of the output.
         /// </summary>
-        public string Name { get { return this.name; } }
+        public string Name { get { return name; } }
         /// <summary>
         /// If the output is enabled.
         /// </summary>
-        public bool IsEnabled { get { return this.enabled; } }
+        public bool IsEnabled { get { return enabled; } }
         /// <summary>
         /// Creates a new MpdOutput object.
         /// </summary>
@@ -62,7 +62,7 @@ namespace Scrabble.LibMpc
         /// <returns>A string representation of the object.</returns>
         public override string ToString()
         {
-            return this.id + "::" + this.name + "::" + this.enabled;
+            return id + "::" + name + "::" + enabled;
         }
     }
 }

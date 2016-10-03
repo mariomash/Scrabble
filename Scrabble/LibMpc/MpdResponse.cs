@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
@@ -43,31 +44,31 @@ namespace Scrabble.LibMpc
         private readonly string errorMessage;
         private readonly ReadOnlyCollection<string> message;
 
-        private Dictionary<string, string> dictionary = null;
+        private Dictionary<string, string> dictionary;
         /// <summary>
         /// If the response denotes an error in the last command.
         /// </summary>
-        public bool IsError { get { return this.isError; } }
+        public bool IsError { get { return isError; } }
         /// <summary>
         /// The error code if an error occured.
         /// </summary>
-        public int ErrorCode { get { return this.errorCode; } }
+        public int ErrorCode { get { return errorCode; } }
         /// <summary>
         /// If an error occured the index of the invalid command in a command list.
         /// </summary>
-        public int CommandListNum { get { return this.commandListNum; } }
+        public int CommandListNum { get { return commandListNum; } }
         /// <summary>
         /// The command executed.
         /// </summary>
-        public string CurrentCommand { get { return this.currentCommand; } }
+        public string CurrentCommand { get { return currentCommand; } }
         /// <summary>
         /// The description of the error, if occured.
         /// </summary>
-        public string ErrorMessage { get { return this.errorMessage; } }
+        public string ErrorMessage { get { return errorMessage; } }
         /// <summary>
         /// The lines of the response message.
         /// </summary>
-        public ReadOnlyCollection<string> Message { get { return this.message; } }
+        public ReadOnlyCollection<string> Message { get { return message; } }
         /// <summary>
         /// The value of an attribute in the MPD response.
         /// </summary>
@@ -77,25 +78,25 @@ namespace Scrabble.LibMpc
         {
             get
             {
-                if (this.dictionary == null)
+                if (dictionary == null)
                 {
-                    this.dictionary = new Dictionary<string,string>();
+                    dictionary = new Dictionary<string,string>();
 
-                    foreach (string line in this.message)
+                    foreach (string line in message)
                     {
                         Match match = LINE_REGEX.Match(line);
                         if (match.Success)
-                            this.dictionary[match.Result("$key")] = match.Result("$value");
+                            dictionary[match.Result("$key")] = match.Result("$value");
                     }
                 }
 
-                return this.dictionary[key];
+                return dictionary[key];
             }
         }
         /// <summary>
         /// The number of lines in the response message.
         /// </summary>
-        public int Count { get { return this.message.Count; } }
+        public int Count { get { return message.Count; } }
         /// <summary>
         /// A line in the MPD response as KeyValuePair. If the message cannot be separated
         /// into key and value according to the MPD protocol spec, a KeyValuePair is returned
@@ -107,11 +108,10 @@ namespace Scrabble.LibMpc
         {
             get
             {
-                Match match = LINE_REGEX.Match(this.message[line]);
+                Match match = LINE_REGEX.Match(message[line]);
                 if (match.Success)
                     return new KeyValuePair<string, string>(match.Result("${key}"), match.Result("${value}"));
-                else
-                    return new KeyValuePair<string,string>(null, this.message[line]);
+                return new KeyValuePair<string,string>(null, message[line]);
             }
         }
         /// <summary>
@@ -123,11 +123,11 @@ namespace Scrabble.LibMpc
             if (message == null)
                 throw new ArgumentNullException("message");
 
-            this.isError = false;
-            this.errorCode = -1;
-            this.commandListNum = 0;
-            this.currentCommand = null;
-            this.errorMessage = null;
+            isError = false;
+            errorCode = -1;
+            commandListNum = 0;
+            currentCommand = null;
+            errorMessage = null;
             this.message = message;
         }
         /// <summary>
@@ -147,7 +147,7 @@ namespace Scrabble.LibMpc
             if (message == null)
                 throw new ArgumentNullException("message");
 
-            this.isError = true;
+            isError = true;
             this.errorCode = errorCode;
             this.commandListNum = commandListNum;
             this.currentCommand = currentCommand;
@@ -163,7 +163,7 @@ namespace Scrabble.LibMpc
         {
             List<string> ret = new List<string>();
 
-            foreach (string line in this.message)
+            foreach (string line in message)
             {
                 Match match = LINE_REGEX.Match(line);
                 if (match.Success)
@@ -188,7 +188,7 @@ namespace Scrabble.LibMpc
         {
             List<string> ret = new List<string>();
 
-            foreach (string line in this.message)
+            foreach (string line in message)
             {
                 Match match = LINE_REGEX.Match(line);
                 if (match.Success)
@@ -208,20 +208,20 @@ namespace Scrabble.LibMpc
         public override string ToString()
         {
             StringBuilder builder = new StringBuilder();
-            foreach (string line in this.message)
+            foreach (string line in message)
                 builder.AppendLine(line);
 
-            if (this.isError)
+            if (isError)
             {
                 builder.Append(ACK);
                 builder.Append(" [");
-                builder.Append(this.errorMessage);
+                builder.Append(errorMessage);
                 builder.Append('@');
-                builder.Append(this.commandListNum);
+                builder.Append(commandListNum);
                 builder.Append("] {");
-                builder.Append(this.currentCommand);
+                builder.Append(currentCommand);
                 builder.Append("} ");
-                builder.Append(this.errorMessage);
+                builder.Append(errorMessage);
                 //ACK [50@1] {play} song doesn't exist: "10240"
             }
             else
@@ -247,7 +247,7 @@ namespace Scrabble.LibMpc
         /// Returns an enumerator for all KeyValuePairs in the MPD response.
         /// </summary>
         /// <returns>An enumerator for all KeyValuePairs in the MPD response.</returns>
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
             return new MpdResponseEnumerator(this);
         }
@@ -277,7 +277,7 @@ namespace Scrabble.LibMpc
         /// </summary>
         KeyValuePair<string, string> IEnumerator<KeyValuePair<string, string>>.Current
         {
-            get { return this.current; }
+            get { return current; }
         }
 
         #endregion
@@ -286,7 +286,7 @@ namespace Scrabble.LibMpc
 
         void IDisposable.Dispose()
         {
-            this.position = -1;
+            position = -1;
         }
 
         #endregion
@@ -295,31 +295,30 @@ namespace Scrabble.LibMpc
         /// <summary>
         /// Returns the current element of the enumerator.
         /// </summary>
-        object System.Collections.IEnumerator.Current
+        object IEnumerator.Current
         {
-            get { return this.current; }
+            get { return current; }
         }
         /// <summary>
         /// Moves the enumerator to the next KeyValuePair in the MPD response.
         /// </summary>
         /// <returns>If the enumerator has any values left.</returns>
-        bool System.Collections.IEnumerator.MoveNext()
+        bool IEnumerator.MoveNext()
         {
-            this.position++;
-            if (this.position < this.response.Count)
+            position++;
+            if (position < response.Count)
             {
-                this.current = this.response[this.position];
+                current = response[position];
                 return true;
             }
-            else
-                return false;
+            return false;
         }
         /// <summary>
         /// Sets the enumerator to it's initial state.
         /// </summary>
-        void System.Collections.IEnumerator.Reset()
+        void IEnumerator.Reset()
         {
-            this.position = -1;
+            position = -1;
         }
 
         #endregion

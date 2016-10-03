@@ -68,71 +68,71 @@ namespace Scrabble.LibMpc
         /// <summary>
         /// The current volume of the output.
         /// </summary>
-        public int Volume { get { return this.volume; } }
+        public int Volume { get { return volume; } }
         /// <summary>
         /// If the playlist is repeated after finish.
         /// </summary>
-        public bool Repeat { get { return this.repeat; } }
+        public bool Repeat { get { return repeat; } }
         /// <summary>
         /// If the playlist is played in random order.
         /// </summary>
-        public bool Random { get { return this.random; } }
+        public bool Random { get { return random; } }
         /// <summary>
         /// The version number of the playlist.
         /// </summary>
-        public int Playlist { get { return this.playlist; } }
+        public int Playlist { get { return playlist; } }
         /// <summary>
         /// The length of the playlist.
         /// </summary>
-        public int PlaylistLength { get { return this.playlistLength; } }
+        public int PlaylistLength { get { return playlistLength; } }
         /// <summary>
         /// The number of seconds crossfaded between song changes.
         /// </summary>
-        public int XFade { get { return this.xFade; } }
+        public int XFade { get { return xFade; } }
         /// <summary>
         /// The state of the MPD.
         /// </summary>
-        public MpdState State { get { return this.state; } }
+        public MpdState State { get { return state; } }
         /// <summary>
         /// The index of the currently played song in the playlist.
         /// </summary>
-        public int Song { get { return this.song; } }
+        public int Song { get { return song; } }
         /// <summary>
         /// The id of the song currently played.
         /// </summary>
-        public int SongId { get { return this.songId; } }
+        public int SongId { get { return songId; } }
         /// <summary>
         /// The number of seconds already played of the current song.
         /// </summary>
-        public int TimeElapsed { get { return this.timeElapsed; } }
+        public int TimeElapsed { get { return timeElapsed; } }
         /// <summary>
         /// The length of the current song in seconds.
         /// </summary>
-        public int TimeTotal { get { return this.timeTotal; } }
+        public int TimeTotal { get { return timeTotal; } }
         /// <summary>
         /// The bitrate of the current song.
         /// </summary>
-        public int Bitrate { get { return this.bitrate; } }
+        public int Bitrate { get { return bitrate; } }
         /// <summary>
         /// The audio sample rate of the current song.
         /// </summary>
-        public int AudioSampleRate { get { return this.audioSampleRate; } }
+        public int AudioSampleRate { get { return audioSampleRate; } }
         /// <summary>
         /// The audio bits of the current song.
         /// </summary>
-        public int AudioBits { get { return this.audioBits; } }
+        public int AudioBits { get { return audioBits; } }
         /// <summary>
         /// The number of audio channels of the current song.
         /// </summary>
-        public int AudioChannels { get { return this.audioChannels; } }
+        public int AudioChannels { get { return audioChannels; } }
         /// <summary>
         /// The number of the update on the MPD database currently running.
         /// </summary>
-        public int UpdatingDb { get { return this.updatingDb; } }
+        public int UpdatingDb { get { return updatingDb; } }
         /// <summary>
         /// An error message, if there is an error.
         /// </summary>
-        public string Error { get { return this.error; } }
+        public string Error { get { return error; } }
         /// <summary>
         /// Creates a new MpdStatus object.
         /// </summary>
@@ -199,13 +199,13 @@ namespace Scrabble.LibMpc
         {
             StringBuilder builder = new StringBuilder();
 
-            appendInt(builder, "volume", this.volume);
-            appendBool(builder, "repeat", this.repeat);
-            appendBool(builder, "random", this.random);
-            appendInt(builder, "playlist", this.playlist);
-            appendInt(builder, "playlistlength", this.playlistLength);
-            appendInt(builder, "xfade", this.xFade);
-            switch (this.state)
+            appendInt(builder, "volume", volume);
+            appendBool(builder, "repeat", repeat);
+            appendBool(builder, "random", random);
+            appendInt(builder, "playlist", playlist);
+            appendInt(builder, "playlistlength", playlistLength);
+            appendInt(builder, "xfade", xFade);
+            switch (state)
             {
                 case MpdState.Play:
                     builder.AppendLine("state: play");
@@ -217,32 +217,32 @@ namespace Scrabble.LibMpc
                     builder.AppendLine("state: stop");
                     break;
             }
-            appendInt(builder, "song", this.song);
-            appendInt(builder, "songid", this.songId);
-            if ((this.timeElapsed >= 0) || (this.timeTotal >= 0))
+            appendInt(builder, "song", song);
+            appendInt(builder, "songid", songId);
+            if ((timeElapsed >= 0) || (timeTotal >= 0))
             {
                 builder.Append("time: ");
-                builder.Append(this.timeElapsed);
+                builder.Append(timeElapsed);
                 builder.Append(":");
-                builder.Append(this.timeTotal);
+                builder.Append(timeTotal);
                 builder.AppendLine();
             }
-            appendInt(builder, "bitrate", this.bitrate);
-            if ((this.audioSampleRate >= 0) || (this.audioBits >= 0) || (this.audioChannels >= 0))
+            appendInt(builder, "bitrate", bitrate);
+            if ((audioSampleRate >= 0) || (audioBits >= 0) || (audioChannels >= 0))
             {
                 builder.Append("audio: ");
-                builder.Append(this.audioSampleRate);
+                builder.Append(audioSampleRate);
                 builder.Append(":");
-                builder.Append(this.audioBits);
+                builder.Append(audioBits);
                 builder.Append(":");
-                builder.Append(this.audioChannels);
+                builder.Append(audioChannels);
                 builder.AppendLine();
             }
-            appendInt(builder, "updating_db", this.updatingDb);
-            if (this.error != null)
+            appendInt(builder, "updating_db", updatingDb);
+            if (error != null)
             {
                 builder.Append("error: ");
-                builder.AppendLine(this.error);
+                builder.AppendLine(error);
             }
 
             return builder.ToString();

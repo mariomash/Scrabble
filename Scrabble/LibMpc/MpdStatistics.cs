@@ -36,31 +36,31 @@ namespace Scrabble.LibMpc
         /// <summary>
         /// The number of artists in the MPD database.
         /// </summary>
-        public int Artists { get { return this.artists; } }
+        public int Artists { get { return artists; } }
         /// <summary>
         /// The number of albums in the MPD database.
         /// </summary>
-        public int Albums { get { return this.albums; } }
+        public int Albums { get { return albums; } }
         /// <summary>
         /// The number of songs in the MPD database.
         /// </summary>
-        public int Songs { get { return this.songs; } }
+        public int Songs { get { return songs; } }
         /// <summary>
         /// The time the MPD server is running in seconds.
         /// </summary>
-        public int Uptime { get { return this.uptime; } }
+        public int Uptime { get { return uptime; } }
         /// <summary>
         /// The number of seconds the MPD played so far.
         /// </summary>
-        public int Playtime { get { return this.playtime; } }
+        public int Playtime { get { return playtime; } }
         /// <summary>
         /// The total playtime of all songs in the MPD database.
         /// </summary>
-        public int DbPlaytime { get { return this.db_playtime; } }
+        public int DbPlaytime { get { return db_playtime; } }
         /// <summary>
         /// The timestamp of the last MPD database update.
         /// </summary>
-        public long DbUpdate { get { return this.db_update; } }
+        public long DbUpdate { get { return db_update; } }
         /// <summary>
         /// Creates a new MpdStatistics object.
         /// </summary>
@@ -97,12 +97,12 @@ namespace Scrabble.LibMpc
         {
             StringBuilder builder = new StringBuilder();
 
-            appendInt(builder, "artists", this.artists);
-            appendInt(builder, "songs", this.songs);
-            appendInt(builder, "uptime", this.uptime);
-            appendInt(builder, "playtime", this.playtime);
-            appendInt(builder, "db_playtime", this.db_playtime);
-            appendLong(builder, "db_update", this.db_update);
+            appendInt(builder, "artists", artists);
+            appendInt(builder, "songs", songs);
+            appendInt(builder, "uptime", uptime);
+            appendInt(builder, "playtime", playtime);
+            appendInt(builder, "db_playtime", db_playtime);
+            appendLong(builder, "db_update", db_update);
 
             return builder.ToString();
         }

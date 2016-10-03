@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
 using Scrabble.Threads;
+using System.Threading;
 
 namespace Scrabble.Config {
     [Serializable]
@@ -39,6 +42,19 @@ namespace Scrabble.Config {
                     Instance = (Configuration)utils.DeSerializeObjectFromXml(
                         $"{dataPath}{Instance.MonitorThread.SnapshotFileName}",
                         typeof(Configuration));
+
+                    Instance.Logger.LogEntries = new ConcurrentDictionary<Guid, LogEntry>();
+                    foreach (var logEntry in Instance.Logger.SerializedLogEntries)
+                    {
+                        var isAdded = false;
+                        while (!isAdded)
+                        {
+                            var guid = Guid.NewGuid();
+
+                            isAdded = Instance.Logger.LogEntries.TryAdd(guid, logEntry) || Instance.Logger.LogEntries.ContainsKey(guid);
+                            Thread.Sleep(TimeSpan.FromMilliseconds(50));
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -63,10 +79,12 @@ namespace Scrabble.Config {
                 var snapshotUbication = $"{dataPath}{Instance.MonitorThread.SnapshotFileName}";
                 var snapshotTempUbication = $"{dataPath}{Instance.MonitorThread.SnapshotFileName}_tmp";
 
+                Instance.Logger.SerializedLogEntries = new List<LogEntry>();
+                foreach (var logEntry in Instance.Logger.LogEntries)
+                    Instance.Logger.SerializedLogEntries.Add(logEntry.Value);
+
                 using (var writer = new StreamWriter($"{snapshotTempUbication}"))
-                {
                     serializer.Serialize(writer, Instance);
-                }
 
                 if (File.Exists(snapshotUbication)) File.Delete(snapshotUbication);
                 File.Move(snapshotTempUbication, snapshotUbication);

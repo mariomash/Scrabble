@@ -5,13 +5,19 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Threading;
+using System.Xml.Serialization;
 
 namespace Scrabble.Config {
     [Serializable]
     public class Logger {
 
+        [XmlIgnore]
+        [IgnoreDataMember]
         public ConcurrentDictionary<Guid, LogEntry> LogEntries;
+
+        public List<LogEntry> SerializedLogEntries;
 
         public bool Active;
         public double MaximumLogEntriesInMemory;
@@ -36,8 +42,7 @@ namespace Scrabble.Config {
 
                 if (logType < Threshold) return;
 
-                var logEntry = new LogEntry()
-                {
+                var logEntry = new LogEntry {
                     Tipo = logType,
                     StackTrace = stack?.ToString(),
                     Message = message,

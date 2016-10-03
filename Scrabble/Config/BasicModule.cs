@@ -15,11 +15,7 @@ namespace Scrabble.Config {
         [XmlIgnore]
         [IgnoreDataMember]
         protected static Configuration Configuration => Configuration.Instance;
-
-        [XmlIgnore]
-        [IgnoreDataMember]
-        protected static Logger Logger => Configuration.Logger;
-
+        
         protected BasicModule()
         {
             Id = new Random().Next(100000000);

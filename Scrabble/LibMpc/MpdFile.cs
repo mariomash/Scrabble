@@ -77,119 +77,119 @@ namespace Scrabble.LibMpc
         /// <summary>
         /// The name and path of the file.
         /// </summary>
-        public string File { get { return this.file; } }
+        public string File { get { return file; } }
         /// <summary>
         /// The length of the file in seconds.
         /// </summary>
-        public int Time { get { return this.time; } }
+        public int Time { get { return time; } }
         /// <summary>
         /// The album of the file.
         /// </summary>
-        public string Album { get { return this.album; } }
+        public string Album { get { return album; } }
         /// <summary>
         /// The artist of the file.
         /// </summary>
-        public string Artist { get { return this.artist; } }
+        public string Artist { get { return artist; } }
         /// <summary>
         /// The title of the file.
         /// </summary>
-        public string Title { get { return this.title; } }
+        public string Title { get { return title; } }
         /// <summary>
         /// The value of the track property of the file.
         /// </summary>
-        public string Track { get { return this.track; } }
+        public string Track { get { return track; } }
         /// <summary>
         /// The name of the song.
         /// </summary>
-        public string Name { get { return this.name; } }
+        public string Name { get { return name; } }
         /// <summary>
         /// The genre of the song.
         /// </summary>
-        public string Genre { get { return this.genre; } }
+        public string Genre { get { return genre; } }
         /// <summary>
         /// The date the song was released.
         /// </summary>
-        public string Date { get { return this.date; } }
+        public string Date { get { return date; } }
         /// <summary>
         /// The composer of the song.
         /// </summary>
-        public string Composer { get { return this.composer; } }
+        public string Composer { get { return composer; } }
         /// <summary>
         /// The performer of the song.
         /// </summary>
-        public string Performer { get { return this.performer; } }
+        public string Performer { get { return performer; } }
         /// <summary>
         /// A comment to the file.
         /// </summary>
-        public string Comment { get { return this.comment; } }
+        public string Comment { get { return comment; } }
         /// <summary>
         /// The number of the disc on a multidisc album.
         /// </summary>
-        public int Disc { get { return this.disc; } }
+        public int Disc { get { return disc; } }
         /// <summary>
         /// The index of the file in a playlist.
         /// </summary>
-        public int Pos { get { return this.pos; } }
+        public int Pos { get { return pos; } }
         /// <summary>
         /// The id of the file in a playlist.
         /// </summary>
-        public int Id { get { return this.id; } }
+        public int Id { get { return id; } }
         /// <summary>
         /// If the MpdFile has the <see cref="Time"/> property set.
         /// </summary>
-        public bool HasTime { get { return this.time != NO_TIME; } }
+        public bool HasTime { get { return time != NO_TIME; } }
         /// <summary>
         /// If the MpdFile has the <see cref="Album"/> property set.
         /// </summary>
-        public bool HasAlbum { get { return this.album != NO_ALBUM; } }
+        public bool HasAlbum { get { return album != NO_ALBUM; } }
         /// <summary>
         /// If the MpdFile has the <see cref="Artist"/> property set.
         /// </summary>
-        public bool HasArtist { get { return this.artist != NO_ARTIST; } }
+        public bool HasArtist { get { return artist != NO_ARTIST; } }
         /// <summary>
         /// If the MpdFile has the <see cref="Title"/> property set.
         /// </summary>
-        public bool HasTitle { get { return this.title != NO_TITLE; } }
+        public bool HasTitle { get { return title != NO_TITLE; } }
         /// <summary>
         /// If the MpdFile has the <see cref="Track"/> property set.
         /// </summary>
-        public bool HasTrack { get { return this.track != NO_TRACK; } }
+        public bool HasTrack { get { return track != NO_TRACK; } }
         /// <summary>
         /// If the MpdFile has the <see cref="Name"/> property set.
         /// </summary>
-        public bool HasName { get { return this.name != NO_NAME; } }
+        public bool HasName { get { return name != NO_NAME; } }
         /// <summary>
         /// If the MpdFile has the <see cref="Genre"/> property set.
         /// </summary>
-        public bool HasGenre { get { return this.genre != NO_GENRE; } }
+        public bool HasGenre { get { return genre != NO_GENRE; } }
         /// <summary>
         /// If the MpdFile has the <see cref="Date"/> property set.
         /// </summary>
-        public bool HasDate { get { return this.date != NO_DATE; } }
+        public bool HasDate { get { return date != NO_DATE; } }
         /// <summary>
         /// If the MpdFile has the <see cref="Composer"/> property set.
         /// </summary>
-        public bool HasComposer { get { return this.composer != NO_COMPOSER; } }
+        public bool HasComposer { get { return composer != NO_COMPOSER; } }
         /// <summary>
         /// If the MpdFile has the <see cref="Performer"/> property set.
         /// </summary>
-        public bool HasPerformer { get { return this.performer != NO_PERFORMER; } }
+        public bool HasPerformer { get { return performer != NO_PERFORMER; } }
         /// <summary>
         /// If the MpdFile has the <see cref="Comment"/> property set.
         /// </summary>
-        public bool HasComment { get { return this.comment != NO_COMMENT; } }
+        public bool HasComment { get { return comment != NO_COMMENT; } }
         /// <summary>
         /// If the MpdFile has the <see cref="Disc"/> property set.
         /// </summary>
-        public bool HasDisc { get { return this.disc != NO_DISC; } }
+        public bool HasDisc { get { return disc != NO_DISC; } }
         /// <summary>
         /// If the MpdFile has the <see cref="Pos"/> property set.
         /// </summary>
-        public bool HasPos { get { return this.pos != NO_POS; } }
+        public bool HasPos { get { return pos != NO_POS; } }
         /// <summary>
         /// If the MpdFile has the <see cref="Id"/> property set.
         /// </summary>
-        public bool HasId { get { return this.id != NO_ID; } }
+        public bool HasId { get { return id != NO_ID; } }
         /// <summary>
         /// Creates a new MpdFile.
         /// </summary>
@@ -251,35 +251,35 @@ namespace Scrabble.LibMpc
         {
             StringBuilder builder = new StringBuilder();
 
-            appendString(builder, TAG_FILE, this.file);
-            if (this.HasTime)
-                appendInt(builder, TAG_TIME, this.time);
-            if (this.HasAlbum)
-                appendString(builder, TAG_ALBUM, this.album);
-            if (this.HasArtist)
-                appendString(builder, TAG_ARTIST, this.artist);
-            if (this.HasTitle)
-                appendString(builder, TAG_TITLE, this.title);
-            if (this.HasTrack)
-                appendString(builder, TAG_TRACK, this.track);
-            if (this.HasName)
-                appendString(builder, TAG_NAME, this.name);
-            if (this.HasGenre)
-                appendString(builder, TAG_GENRE, this.genre);
-            if (this.HasDate)
-                appendString(builder, TAG_DATE, this.date);
-            if (this.HasComposer)
-                appendString(builder, TAG_COMPOSER, this.composer);
-            if (this.HasPerformer)
-                appendString(builder, TAG_PERFORMER, this.performer);
-            if (this.HasComment)
-                appendString(builder, TAG_COMMENT, this.comment);
-            if (this.HasDisc)
-                appendInt(builder, TAG_DISC, this.disc);
-            if (this.HasPos)
-                appendInt(builder, TAG_POS, this.pos);
-            if (this.HasId)
-                appendInt(builder, TAG_ID, this.id);
+            appendString(builder, TAG_FILE, file);
+            if (HasTime)
+                appendInt(builder, TAG_TIME, time);
+            if (HasAlbum)
+                appendString(builder, TAG_ALBUM, album);
+            if (HasArtist)
+                appendString(builder, TAG_ARTIST, artist);
+            if (HasTitle)
+                appendString(builder, TAG_TITLE, title);
+            if (HasTrack)
+                appendString(builder, TAG_TRACK, track);
+            if (HasName)
+                appendString(builder, TAG_NAME, name);
+            if (HasGenre)
+                appendString(builder, TAG_GENRE, genre);
+            if (HasDate)
+                appendString(builder, TAG_DATE, date);
+            if (HasComposer)
+                appendString(builder, TAG_COMPOSER, composer);
+            if (HasPerformer)
+                appendString(builder, TAG_PERFORMER, performer);
+            if (HasComment)
+                appendString(builder, TAG_COMMENT, comment);
+            if (HasDisc)
+                appendInt(builder, TAG_DISC, disc);
+            if (HasPos)
+                appendInt(builder, TAG_POS, pos);
+            if (HasId)
+                appendInt(builder, TAG_ID, id);
 
             return builder.ToString();
         }
@@ -389,23 +389,22 @@ namespace Scrabble.LibMpc
 
             if (file == null)
                 return null;
-            else
-                return new MpdFile(
-                    file,
-                    time,
-                    album,
-                    artist,
-                    title,
-                    track,
-                    name,
-                    genre,
-                    date,
-                    composer,
-                    performer,
-                    comment,
-                    disc,
-                    pos,
-                    id);
+            return new MpdFile(
+                file,
+                time,
+                album,
+                artist,
+                title,
+                track,
+                name,
+                genre,
+                date,
+                composer,
+                performer,
+                comment,
+                disc,
+                pos,
+                id);
         }
         /// <summary>
         /// Builds a list of MpdFile objects from a MpdResponse object.

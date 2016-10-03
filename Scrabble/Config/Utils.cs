@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace Scrabble.Config {
     public class Utils {
-        public Utils()
-        {
-        }
-
         /// <summary>
         /// Deserializes xml file to object
         /// </summary>
@@ -22,8 +20,8 @@ namespace Scrabble.Config {
             try
             {
                 stream = File.Open(filePath, FileMode.Open);
-                var x = new System.Xml.Serialization.XmlSerializer(type);
-                data = x.Deserialize(new System.Xml.XmlTextReader(stream));
+                var x = new XmlSerializer(type);
+                data = x.Deserialize(new XmlTextReader(stream));
 
                 stream.Close();
                 stream.Dispose();
