@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Logger>
+    <Active>true</Active>
+    <MaximumLogEntriesInMemory>50</MaximumLogEntriesInMemory>
+    <Threshold>Info</Threshold>
+  </Logger>
+  <MonitorThread>
+    <Active>true</Active>
+    <DelayInMs>2000</DelayInMs>
+    <SnapshotFileName>Snapshot.xml</SnapshotFileName>
+    <ForceExitEachHours>0</ForceExitEachHours>
+  </MonitorThread>
+</Configuration>

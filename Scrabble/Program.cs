@@ -1,14 +1,23 @@
 ﻿using System;
 using System.Net;
+using System.Threading;
 using Mono.Unix;
 using Mono.Unix.Native;
 using Nancy.Hosting.Self;
 using Scrabble.LibMpc;
+using static Scrabble.Config.Configuration;
 
 namespace Scrabble {
     class Program {
         static void Main(string[] args)
         {
+
+            // Please remember that there's also a singleton Configuration that should be
+            // already initialized...
+
+            var threadHiloAutoMonitor = new Thread(Instance.MonitorThread.WorkItem);
+            threadHiloAutoMonitor.Start();
+
             var mpc = new Mpc
             {
                 Connection = new MpcConnection
@@ -48,6 +57,7 @@ namespace Scrabble {
 
             Console.WriteLine("Stopping");
             host.Stop();  // stop hosting
+            Instance.StopSignal = true;
 
         }
 

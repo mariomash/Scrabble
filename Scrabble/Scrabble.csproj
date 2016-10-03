@@ -46,7 +46,9 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -55,6 +57,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config\BasicModule.cs" />
+    <Compile Include="Config\Configuration.cs" />
+    <Compile Include="Config\IThread.cs" />
+    <Compile Include="Config\LogEntry.cs" />
+    <Compile Include="Config\Logger.cs" />
+    <Compile Include="Config\LogType.cs" />
+    <Compile Include="Config\Utils.cs" />
     <Compile Include="HelloModule.cs" />
     <Compile Include="LibMpc\Enum.cs" />
     <Compile Include="LibMpc\Exception.cs" />
@@ -68,13 +77,17 @@
     <Compile Include="LibMpc\MpdStatus.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Threads\MonitorThread.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Threads\" />
+    <Content Include="Data\configuration.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
