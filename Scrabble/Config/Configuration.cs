@@ -33,7 +33,7 @@ namespace Scrabble.Config {
                 $"{dataPath}{fileConfigName}",
                 typeof(Configuration));
 
-            Instance.Logger.Log(LogType.Verbose, $"Loading Config");
+            Instance.Logger.Log(LogType.Verbose, @"Loading Config");
 
             if (File.Exists($"{dataPath}{Instance.MonitorThread.SnapshotFileName}"))
             {
@@ -58,7 +58,7 @@ namespace Scrabble.Config {
                 }
                 catch (Exception ex)
                 {
-                    Instance.Logger.Log(LogType.Error, $"Cannot use the current Snapshot, there are some deserializing it -a {ex.Message}");
+                    Instance.Logger.Log(LogType.Error, $"Cannot use the current Snapshot, there was some error deserializing it: {ex.Message}");
                     File.Move($"{dataPath}{Instance.MonitorThread.SnapshotFileName}", $"{dataPath}{Instance.MonitorThread.SnapshotFileName}-{DateTime.Now.ToFileTimeUtc()}-bad");
                 }
             }
@@ -68,7 +68,7 @@ namespace Scrabble.Config {
 
         }
 
-        public void SaveSnapshot()
+        public static void SaveSnapshot()
         {
             try
             {
@@ -99,7 +99,7 @@ namespace Scrabble.Config {
             }
         }
 
-        public void SendStopSignal()
+        public static void SendStopSignal()
         {
             Instance.StopSignal(Instance);
         }
@@ -113,7 +113,7 @@ namespace Scrabble.Config {
 
         [XmlIgnore]
         [IgnoreDataMember]
-        public DateTime LastStartup { get; set; }
+        public DateTime LastStartup { get; private set; }
 
         public MonitorThread MonitorThread { get; set; }
 

@@ -82,9 +82,9 @@ namespace Scrabble.LibMpc
                 {
                     dictionary = new Dictionary<string,string>();
 
-                    foreach (string line in message)
+                    foreach (var line in message)
                     {
-                        Match match = LINE_REGEX.Match(line);
+                        var match = LINE_REGEX.Match(line);
                         if (match.Success)
                             dictionary[match.Result("$key")] = match.Result("$value");
                     }
@@ -108,7 +108,7 @@ namespace Scrabble.LibMpc
         {
             get
             {
-                Match match = LINE_REGEX.Match(message[line]);
+                var match = LINE_REGEX.Match(message[line]);
                 if (match.Success)
                     return new KeyValuePair<string, string>(match.Result("${key}"), match.Result("${value}"));
                 return new KeyValuePair<string,string>(null, message[line]);
@@ -121,7 +121,7 @@ namespace Scrabble.LibMpc
         public MpdResponse( ReadOnlyCollection<string> message )
         {
             if (message == null)
-                throw new ArgumentNullException("message");
+                throw new ArgumentNullException(nameof(message));
 
             isError = false;
             errorCode = -1;
@@ -141,11 +141,11 @@ namespace Scrabble.LibMpc
         public MpdResponse( int errorCode, int commandListNum, string currentCommand, string errorMessage, ReadOnlyCollection<string> message)
         {
             if (currentCommand == null)
-                throw new ArgumentNullException("currentCommand");
+                throw new ArgumentNullException(nameof(currentCommand));
             if (errorMessage == null)
-                throw new ArgumentNullException("errorMessage");
+                throw new ArgumentNullException(nameof(errorMessage));
             if (message == null)
-                throw new ArgumentNullException("message");
+                throw new ArgumentNullException(nameof(message));
 
             isError = true;
             this.errorCode = errorCode;
@@ -161,17 +161,17 @@ namespace Scrabble.LibMpc
         /// <returns>The values in all lines with the given attribute.</returns>
         public List<string> getAttributeValueList(string attribute)
         {
-            List<string> ret = new List<string>();
+            var ret = new List<string>();
 
-            foreach (string line in message)
+            foreach (var line in message)
             {
-                Match match = LINE_REGEX.Match(line);
+                var match = LINE_REGEX.Match(line);
                 if (match.Success)
                 {
-                    string key = match.Result("${key}");
+                    var key = match.Result("${key}");
                     if( ( key != null ) && key.Equals( attribute ) )
                     {
-                        string value = match.Result("${value}");
+                        var value = match.Result("${value}");
                         if( value != null )
                             ret.Add( value );
                     }
@@ -186,14 +186,14 @@ namespace Scrabble.LibMpc
         /// <returns>The list of values in all key/value pairs in the response.</returns>
         public List<string> getValueList()
         {
-            List<string> ret = new List<string>();
+            var ret = new List<string>();
 
-            foreach (string line in message)
+            foreach (var line in message)
             {
-                Match match = LINE_REGEX.Match(line);
+                var match = LINE_REGEX.Match(line);
                 if (match.Success)
                 {
-                    string value = match.Result("${value}");
+                    var value = match.Result("${value}");
                     if (value != null)
                         ret.Add(value);
                 }
@@ -207,8 +207,8 @@ namespace Scrabble.LibMpc
         /// <returns>The response text of the MPD server from the object.</returns>
         public override string ToString()
         {
-            StringBuilder builder = new StringBuilder();
-            foreach (string line in message)
+            var builder = new StringBuilder();
+            foreach (var line in message)
                 builder.AppendLine(line);
 
             if (isError)

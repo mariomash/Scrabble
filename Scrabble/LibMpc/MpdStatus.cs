@@ -197,7 +197,7 @@ namespace Scrabble.LibMpc
         /// <returns>A string representation of the object.</returns>
         public override string ToString()
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
 
             appendInt(builder, "volume", volume);
             appendBool(builder, "repeat", repeat);

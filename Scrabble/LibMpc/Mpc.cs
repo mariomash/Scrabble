@@ -111,7 +111,7 @@ namespace Scrabble.LibMpc
 
         private MpcConnection getConnection()
         {
-            MpcConnection ret = connection;
+            var ret = connection;
             if (ret == null)
                 throw new NotConnectedException();
             return ret;
@@ -155,19 +155,19 @@ namespace Scrabble.LibMpc
         /// <returns>The list of all MPD outputs.</returns>
         public MpdOutput[] Outputs()
         {
-            MpdResponse response = getConnection().Exec("outputs");
+            var response = getConnection().Exec("outputs");
             if (response.Message.Count % 3 != 0)
                 throw new InvalidMpdResponseException();
 
-            MpdOutput[] ret = new MpdOutput[response.Message.Count / 3];
+            var ret = new MpdOutput[response.Message.Count / 3];
 
-            for (int i = 0; i < ret.Length; i++)
+            for (var i = 0; i < ret.Length; i++)
             {
                 int id;
                 string name;
                 int enabled;
 
-                KeyValuePair<string, string> idLine = response[i * 3];
+                var idLine = response[i * 3];
                 if (idLine.Key == null)
                     throw new InvalidMpdResponseException("Invalid form of line " + (i * 3));
                 if (!idLine.Key.Equals("outputid"))
@@ -175,14 +175,14 @@ namespace Scrabble.LibMpc
                 if( !int.TryParse(idLine.Value, out id) )
                     throw new InvalidMpdResponseException("Value of line " + (i * 3) + " is not a number");
 
-                KeyValuePair<string, string> nameLine = response[i * 3 + 1];
+                var nameLine = response[i * 3 + 1];
                 if (nameLine.Key == null)
                     throw new InvalidMpdResponseException("Invalid form of line " + (i * 3 + 1));
                 if (!nameLine.Key.Equals("outputname"))
                     throw new InvalidMpdResponseException("Key of line " + (i * 3 + 1) + " is not 'outputname'");
                 name = nameLine.Value;
 
-                KeyValuePair<string, string> enabledLine = response[i * 3 + 2];
+                var enabledLine = response[i * 3 + 2];
                 if (enabledLine.Key == null)
                     throw new InvalidMpdResponseException("Invalid form of line " + (i * 3 + 2));
                 if (!enabledLine.Key.Equals("outputenabled"))
@@ -201,13 +201,13 @@ namespace Scrabble.LibMpc
         /// <returns>The list of tag types the MPD supports.</returns>
         public string[] TagTypes()
         {
-            MpdResponse response = getConnection().Exec("tagtypes");
+            var response = getConnection().Exec("tagtypes");
 
-            string[] ret = new string[response.Message.Count];
+            var ret = new string[response.Message.Count];
 
-            for (int i = 0; i < ret.Length; i++)
+            for (var i = 0; i < ret.Length; i++)
             {
-                KeyValuePair<string, string> line = response[i];
+                var line = response[i];
                 if (!line.Key.Equals("tagtype"))
                     throw new InvalidMpdResponseException("Key of line " + (i) + " is not 'tagtype'");
                 ret[i] = line.Value;
@@ -221,14 +221,14 @@ namespace Scrabble.LibMpc
         /// <returns>An sequential number of the update process.</returns>
         public int Update()
         {
-            MpdResponse response = getConnection().Exec("update");
+            var response = getConnection().Exec("update");
             
             if( response.Message.Count != 1 )
                 throw new InvalidMpdResponseException("Respose message has more than one line.");
 
             int ret;
 
-            KeyValuePair<string, string> line = response[0];
+            var line = response[0];
             if (!line.Key.Equals("updating_db"))
                 throw new InvalidMpdResponseException("Key of line 0 is not 'updating_db'");
             if (!int.TryParse(line.Value, out ret))
@@ -365,7 +365,7 @@ namespace Scrabble.LibMpc
             if (token == null)
                 throw new ArgumentNullException(nameof(token));
 
-            MpdResponse response = getConnection().Exec("search", new[] { toTag(scopeSpecifier), token });
+            var response = getConnection().Exec("search", new[] { toTag(scopeSpecifier), token });
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -383,9 +383,9 @@ namespace Scrabble.LibMpc
         public void Add(string filename)
         {
             if (filename == null)
-                throw new ArgumentNullException("filename");
+                throw new ArgumentNullException(nameof(filename));
 
-            MpdResponse response = getConnection().Exec("add", new[] { filename });
+            var response = getConnection().Exec("add", new[] { filename });
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -398,9 +398,9 @@ namespace Scrabble.LibMpc
         public int AddId(string filename)
         {
             if (filename == null)
-                throw new ArgumentNullException("filename");
+                throw new ArgumentNullException(nameof(filename));
 
-            MpdResponse response = getConnection().Exec("add", new[] { filename });
+            var response = getConnection().Exec("add", new[] { filename });
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -408,10 +408,10 @@ namespace Scrabble.LibMpc
             if (response.Count != 1)
                 throw new InvalidMpdResponseException("Returned more than one line for command addid.");
 
-            string id = response["Id"];
+            var id = response["Id"];
             if( id == null )
                 throw new InvalidMpdResponseException("Tag Id missing in response to command addid.");
-            int tryId = -1;
+            var tryId = -1;
             if( !int.TryParse(id, out tryId) )
                 throw new InvalidMpdResponseException("Tag Id in response to command addid does not contain an number.");
 
@@ -422,7 +422,7 @@ namespace Scrabble.LibMpc
         /// </summary>
         public void Clear()
         {
-            MpdResponse response = getConnection().Exec("clear");
+            var response = getConnection().Exec("clear");
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -433,7 +433,7 @@ namespace Scrabble.LibMpc
         /// <returns>The information of the current song.</returns>
         public MpdFile CurrentSong()
         {
-            MpdResponse response = getConnection().Exec("currentsong");
+            var response = getConnection().Exec("currentsong");
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -446,7 +446,7 @@ namespace Scrabble.LibMpc
         /// <param name="nr">The index of the track to remove from the playlist.</param>
         public void Delete(int nr)
         {
-            MpdResponse response = getConnection().Exec("delete", new[] { nr.ToString() });
+            var response = getConnection().Exec("delete", new[] { nr.ToString() });
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -457,7 +457,7 @@ namespace Scrabble.LibMpc
         /// <param name="id">The id of the track to remove from the playlist.</param>
         public void DeleteId(int id)
         {
-            MpdResponse response = getConnection().Exec("deleteid", new[] { id.ToString() });
+            var response = getConnection().Exec("deleteid", new[] { id.ToString() });
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -469,9 +469,9 @@ namespace Scrabble.LibMpc
         public void Load( string name )
         {
             if (name == null)
-                throw new ArgumentNullException("name");
+                throw new ArgumentNullException(nameof(name));
 
-            MpdResponse response = getConnection().Exec("load", new[] { name });
+            var response = getConnection().Exec("load", new[] { name });
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -484,11 +484,11 @@ namespace Scrabble.LibMpc
         public void Rename(string oldName, string newName)
         {
             if (oldName == null)
-                throw new ArgumentNullException("oldName");
+                throw new ArgumentNullException(nameof(oldName));
             if (newName == null)
-                throw new ArgumentNullException("newName");
+                throw new ArgumentNullException(nameof(newName));
 
-            MpdResponse response = getConnection().Exec("rename", new[] { oldName, newName });
+            var response = getConnection().Exec("rename", new[] { oldName, newName });
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -500,7 +500,7 @@ namespace Scrabble.LibMpc
         /// <param name="newNr">The new index of the track in the playlist.</param>
         public void Move(int oldNr, int newNr)
         {
-            MpdResponse response = getConnection().Exec("move", new[] { oldNr.ToString(), newNr.ToString() });
+            var response = getConnection().Exec("move", new[] { oldNr.ToString(), newNr.ToString() });
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -512,7 +512,7 @@ namespace Scrabble.LibMpc
         /// <param name="nr">The new index of the track in the playlist.</param>
         public void MoveId(int id, int nr)
         {
-            MpdResponse response = getConnection().Exec("moveid", new[] { id.ToString(), nr.ToString() });
+            var response = getConnection().Exec("moveid", new[] { id.ToString(), nr.ToString() });
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -523,7 +523,7 @@ namespace Scrabble.LibMpc
         /// <returns>The meta data of the items in the current playlist.</returns>
         public List<MpdFile> PlaylistInfo()
         {
-            MpdResponse response = getConnection().Exec("playlistinfo");
+            var response = getConnection().Exec("playlistinfo");
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -537,7 +537,7 @@ namespace Scrabble.LibMpc
         /// <returns>The meta data of the track in the current playlist.</returns>
         public MpdFile PlaylistInfo( int nr )
         {
-            MpdResponse response = getConnection().Exec("playlistinfo", new[] { nr.ToString() } );
+            var response = getConnection().Exec("playlistinfo", new[] { nr.ToString() } );
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -550,7 +550,7 @@ namespace Scrabble.LibMpc
         /// <returns>The meta data of the items in the current playlist.</returns>
         public List<MpdFile> PlaylistId()
         {
-            MpdResponse response = getConnection().Exec("playlistid");
+            var response = getConnection().Exec("playlistid");
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -564,7 +564,7 @@ namespace Scrabble.LibMpc
         /// <returns>The meta data of the track in the current playlist.</returns>
         public MpdFile PlaylistId(int id)
         {
-            MpdResponse response = getConnection().Exec("playlistid", new[] { id.ToString() });
+            var response = getConnection().Exec("playlistid", new[] { id.ToString() });
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -578,7 +578,7 @@ namespace Scrabble.LibMpc
         /// <returns>All changed songs in the playlist since the given version.</returns>
         public List<MpdFile> Plchanges( int version )
         {
-            MpdResponse response = getConnection().Exec("plchanges", new[] {version.ToString()});
+            var response = getConnection().Exec("plchanges", new[] {version.ToString()});
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -595,7 +595,7 @@ namespace Scrabble.LibMpc
         /// </returns>
         public List<KeyValuePair<int, int>> PlChangesPosId( int version )
         {
-            MpdResponse response = getConnection().Exec("plchangesposid", new[] { version.ToString() });
+            var response = getConnection().Exec("plchangesposid", new[] { version.ToString() });
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -603,12 +603,12 @@ namespace Scrabble.LibMpc
             if (response.Count % 2 != 0)
                 throw new InvalidMpdResponseException("Response to command plchangesposid contains an odd number of lines!");
 
-            List<KeyValuePair<int, int>> ret = new List<KeyValuePair<int, int>>();
+            var ret = new List<KeyValuePair<int, int>>();
 
-            for (int i = 0; i < response.Count; i += 2)
+            for (var i = 0; i < response.Count; i += 2)
             {
-                KeyValuePair<string, string> posLine = response[i];
-                KeyValuePair<string, string> idLine = response[i+1];
+                var posLine = response[i];
+                var idLine = response[i+1];
 
                 if ((posLine.Key == null) || (posLine.Value == null))
                     throw new InvalidMpdResponseException("Invalid format of line " + i + "!");
@@ -620,10 +620,10 @@ namespace Scrabble.LibMpc
                 if (!idLine.Key.Equals("Id"))
                     throw new InvalidMpdResponseException("Line " + (i + 1) + " does not start with \"Id\"!");
 
-                int tryPos = -1;
+                var tryPos = -1;
                 if (!int.TryParse(posLine.Value, out tryPos))
                     throw new InvalidMpdResponseException("Tag value on line " + i + " is not a number.");
-                int tryId = -1;
+                var tryId = -1;
                 if (!int.TryParse(idLine.Value, out tryId))
                     throw new InvalidMpdResponseException("Tag value on line " + (i + 1) + " is not a number.");
 
@@ -640,9 +640,9 @@ namespace Scrabble.LibMpc
         public void Rm(string name)
         {
             if (name == null)
-                throw new ArgumentNullException("name");
+                throw new ArgumentNullException(nameof(name));
 
-            MpdResponse response = getConnection().Exec("rm", new[] { name });
+            var response = getConnection().Exec("rm", new[] { name });
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -654,9 +654,9 @@ namespace Scrabble.LibMpc
         public void Save(string name)
         {
             if (name == null)
-                throw new ArgumentNullException("name");
+                throw new ArgumentNullException(nameof(name));
 
-            MpdResponse response = getConnection().Exec("save", new[] { name });
+            var response = getConnection().Exec("save", new[] { name });
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -666,7 +666,7 @@ namespace Scrabble.LibMpc
         /// </summary>
         public void Shuffle()
         {
-            MpdResponse response = getConnection().Exec("shuffle");
+            var response = getConnection().Exec("shuffle");
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -678,7 +678,7 @@ namespace Scrabble.LibMpc
         /// <param name="nr2">The index of the second track.</param>
         public void Swap(int nr1, int nr2)
         {
-            MpdResponse response = getConnection().Exec("swap", new[] { nr1.ToString(), nr2.ToString() });
+            var response = getConnection().Exec("swap", new[] { nr1.ToString(), nr2.ToString() });
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -690,7 +690,7 @@ namespace Scrabble.LibMpc
         /// <param name="id2">The id of the second track.</param>
         public void SwapId(int id1, int id2)
         {
-            MpdResponse response = getConnection().Exec("swapid", new[] { id1.ToString(), id2.ToString() });
+            var response = getConnection().Exec("swapid", new[] { id1.ToString(), id2.ToString() });
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -703,9 +703,9 @@ namespace Scrabble.LibMpc
         public List<string> ListPlaylist(string name)
         {
             if (name == null)
-                throw new ArgumentNullException("name");
+                throw new ArgumentNullException(nameof(name));
 
-            MpdResponse response = getConnection().Exec("listplaylist", new[] { name });
+            var response = getConnection().Exec("listplaylist", new[] { name });
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -720,9 +720,9 @@ namespace Scrabble.LibMpc
         public List<MpdFile> ListPlaylistInfo(string name)
         {
             if (name == null)
-                throw new ArgumentNullException("name");
+                throw new ArgumentNullException(nameof(name));
 
-            MpdResponse response = getConnection().Exec("listplaylistinfo", new[] { name });
+            var response = getConnection().Exec("listplaylistinfo", new[] { name });
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -737,11 +737,11 @@ namespace Scrabble.LibMpc
         public void PlaylistAdd(string name, string file)
         {
             if (name == null)
-                throw new ArgumentNullException("name");
+                throw new ArgumentNullException(nameof(name));
             if (file == null)
-                throw new ArgumentNullException("file");
+                throw new ArgumentNullException(nameof(file));
 
-            MpdResponse response = getConnection().Exec("playlistadd", new[] { name, file });
+            var response = getConnection().Exec("playlistadd", new[] { name, file });
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -753,9 +753,9 @@ namespace Scrabble.LibMpc
         public void PlaylistClear(string name)
         {
             if (name == null)
-                throw new ArgumentNullException("name");
+                throw new ArgumentNullException(nameof(name));
 
-            MpdResponse response = getConnection().Exec("playlistclear", new[] { name });
+            var response = getConnection().Exec("playlistclear", new[] { name });
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -768,9 +768,9 @@ namespace Scrabble.LibMpc
         public void PlaylistDelete(string name, int id)
         {
             if (name == null)
-                throw new ArgumentNullException("name");
+                throw new ArgumentNullException(nameof(name));
 
-            MpdResponse response = getConnection().Exec("playlistdelete", new[] { name, id.ToString() });
+            var response = getConnection().Exec("playlistdelete", new[] { name, id.ToString() });
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -784,9 +784,9 @@ namespace Scrabble.LibMpc
         public void PlaylistMove(string name, int id, int nr)
         {
             if (name == null)
-                throw new ArgumentNullException("name");
+                throw new ArgumentNullException(nameof(name));
 
-            MpdResponse response = getConnection().Exec("playlistmove", new[] { id.ToString(), nr.ToString() });
+            var response = getConnection().Exec("playlistmove", new[] { id.ToString(), nr.ToString() });
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -800,9 +800,9 @@ namespace Scrabble.LibMpc
         public List<MpdFile> PlaylistFind(ScopeSpecifier scopeSpecifier, string token)
         {
             if (token == null)
-                throw new ArgumentNullException("token");
+                throw new ArgumentNullException(nameof(token));
 
-            MpdResponse response = getConnection().Exec("playlistfind", new[] { toTag(scopeSpecifier), token });
+            var response = getConnection().Exec("playlistfind", new[] { toTag(scopeSpecifier), token });
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -818,9 +818,9 @@ namespace Scrabble.LibMpc
         public List<MpdFile> PlaylistSearch(ScopeSpecifier scopeSpecifier, string token)
         {
             if (token == null)
-                throw new ArgumentNullException("token");
+                throw new ArgumentNullException(nameof(token));
 
-            MpdResponse response = getConnection().Exec("playlistsearch", new[] { toTag(scopeSpecifier), token });
+            var response = getConnection().Exec("playlistsearch", new[] { toTag(scopeSpecifier), token });
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -836,7 +836,7 @@ namespace Scrabble.LibMpc
         /// <param name="seconds">The seconds to crossfade between songs.</param>
         public void Crossfade(int seconds)
         {
-            MpdResponse response = getConnection().Exec("crossfade", new[] { seconds.ToString() });
+            var response = getConnection().Exec("crossfade", new[] { seconds.ToString() });
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -846,7 +846,7 @@ namespace Scrabble.LibMpc
         /// </summary>
         public void Next()
         {
-            MpdResponse response = getConnection().Exec("next");
+            var response = getConnection().Exec("next");
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -857,7 +857,7 @@ namespace Scrabble.LibMpc
         /// <param name="pause">If the playback should be paused or resumed.</param>
         public void Pause(bool pause)
         {
-            MpdResponse response = getConnection().Exec("pause", new[] { pause ? "1" : "0" });
+            var response = getConnection().Exec("pause", new[] { pause ? "1" : "0" });
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -867,7 +867,7 @@ namespace Scrabble.LibMpc
         /// </summary>
         public void Play()
         {
-            MpdResponse response = getConnection().Exec("play");
+            var response = getConnection().Exec("play");
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -878,7 +878,7 @@ namespace Scrabble.LibMpc
         /// <param name="nr">The index of the track in the playlist to start playing.</param>
         public void Play(int nr)
         {
-            MpdResponse response = getConnection().Exec("play", new[] { nr.ToString() });
+            var response = getConnection().Exec("play", new[] { nr.ToString() });
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -888,7 +888,7 @@ namespace Scrabble.LibMpc
         /// </summary>
         public void PlayId()
         {
-            MpdResponse response = getConnection().Exec("playid");
+            var response = getConnection().Exec("playid");
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -899,7 +899,7 @@ namespace Scrabble.LibMpc
         /// <param name="id">The id of the track to start playing.</param>
         public void PlayId(int id)
         {
-            MpdResponse response = getConnection().Exec("playid", new[] { id.ToString() });
+            var response = getConnection().Exec("playid", new[] { id.ToString() });
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -909,7 +909,7 @@ namespace Scrabble.LibMpc
         /// </summary>
         public void Previous()
         {
-            MpdResponse response = getConnection().Exec("previous");
+            var response = getConnection().Exec("previous");
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -920,7 +920,7 @@ namespace Scrabble.LibMpc
         /// <param name="random">If the MPD playlist should be played randomly.</param>
         public void Random(bool random)
         {
-            MpdResponse response = getConnection().Exec("random", new[] { random ? "1" : "0" });
+            var response = getConnection().Exec("random", new[] { random ? "1" : "0" });
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -931,7 +931,7 @@ namespace Scrabble.LibMpc
         /// <param name="repeat">If the MPD should repeat the playlist.</param>
         public void Repeat(bool repeat)
         {
-            MpdResponse response = getConnection().Exec("repeat", new[] { repeat ? "1" : "0" });
+            var response = getConnection().Exec("repeat", new[] { repeat ? "1" : "0" });
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -943,7 +943,7 @@ namespace Scrabble.LibMpc
         /// <param name="time">The number of seconds to start playback on.</param>
         public void Seek(int nr, int time)
         {
-            MpdResponse response = getConnection().Exec("seek", new[] { nr.ToString(), time.ToString() });
+            var response = getConnection().Exec("seek", new[] { nr.ToString(), time.ToString() });
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -955,7 +955,7 @@ namespace Scrabble.LibMpc
         /// <param name="time">The number of seconds to start playback on.</param>
         public void SeekId(int id, int time)
         {
-            MpdResponse response = getConnection().Exec("seekid", new[] { id.ToString(), time.ToString() });
+            var response = getConnection().Exec("seekid", new[] { id.ToString(), time.ToString() });
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -971,7 +971,7 @@ namespace Scrabble.LibMpc
             if (vol > 100)
                 throw new ArgumentException("vol > 100");
 
-            MpdResponse response = getConnection().Exec("setvol", new[] { vol.ToString() });
+            var response = getConnection().Exec("setvol", new[] { vol.ToString() });
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -981,7 +981,7 @@ namespace Scrabble.LibMpc
         /// </summary>
         public void Stop()
         {
-            MpdResponse response = getConnection().Exec("stop");
+            var response = getConnection().Exec("stop");
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -1003,7 +1003,7 @@ namespace Scrabble.LibMpc
         /// <returns>The commands the current user has access to.</returns>
         public List<string> Commands()
         {
-            MpdResponse response = getConnection().Exec("commands");
+            var response = getConnection().Exec("commands");
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -1016,7 +1016,7 @@ namespace Scrabble.LibMpc
         /// <returns>The commands the current user does has access to.</returns>
         public List<string> NotCommands()
         {
-            MpdResponse response = getConnection().Exec("notcommands");
+            var response = getConnection().Exec("notcommands");
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
@@ -1031,7 +1031,7 @@ namespace Scrabble.LibMpc
         public bool Password(string password)
         {
             if (password == null)
-                throw new ArgumentNullException("password");
+                throw new ArgumentNullException(nameof(password));
 
             return getConnection().Exec("password", new[] { password }).IsError;
         }
@@ -1048,20 +1048,20 @@ namespace Scrabble.LibMpc
         /// <returns>The current statistics fromt the MPD.</returns>
         public MpdStatistics Stats()
         {
-            MpdResponse response = getConnection().Exec("stats");
+            var response = getConnection().Exec("stats");
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
 
-            int artists = -1;
-            int albums = -1;
-            int songs = -1;
-            int uptime = -1;
-            int playtime = -1;
-            int db_playtime = -1;
-            int db_update = -1;
+            var artists = -1;
+            var albums = -1;
+            var songs = -1;
+            var uptime = -1;
+            var playtime = -1;
+            var db_playtime = -1;
+            var db_update = -1;
 
-            foreach (KeyValuePair<string, string> line in response)
+            foreach (var line in response)
             {
                 if( ( line.Key != null ) && ( line.Value!=null ) )
                     switch (line.Key)
@@ -1126,31 +1126,31 @@ namespace Scrabble.LibMpc
         /// <returns>The current status of the MPD.</returns>
         public MpdStatus Status()
         {
-            MpdResponse response = getConnection().Exec("status");
+            var response = getConnection().Exec("status");
 
             if (response.IsError)
                 throw new MpdResponseException(response.ErrorCode, response.ErrorMessage);
 
-            int volume = -1;
-            bool repeat = false;
-            bool random = false;
-            int playlist = -1;
-            int playlistLength = -1;
-            int playlistQueue = -1;
-            int xFade = -1;
-            MpdState state = MpdState.Unknown;
-            int song = -1;
-            int songId = -1;
-            int timeElapsed = -1;
-            int timeTotal = -1;
-            int bitrate = -1;
-            int audioSampleRate = -1;
-            int audioBits = -1;
-            int audioChannels = -1;
-            int updatingDb = -1;
+            var volume = -1;
+            var repeat = false;
+            var random = false;
+            var playlist = -1;
+            var playlistLength = -1;
+            var playlistQueue = -1;
+            var xFade = -1;
+            var state = MpdState.Unknown;
+            var song = -1;
+            var songId = -1;
+            var timeElapsed = -1;
+            var timeTotal = -1;
+            var bitrate = -1;
+            var audioSampleRate = -1;
+            var audioBits = -1;
+            var audioChannels = -1;
+            var updatingDb = -1;
             string error = null;
 
-            foreach (KeyValuePair<string, string> line in response)
+            foreach (var line in response)
             {
                 if ( (line.Key != null) && (line.Value!=null) )
                     switch (line.Key)
@@ -1231,7 +1231,7 @@ namespace Scrabble.LibMpc
                             }
                             break;
                         case "time":
-                            int index = line.Value.IndexOf(':');
+                            var index = line.Value.IndexOf(':');
                             if (index >= 0)
                             {
                                 int tryValue;
@@ -1249,7 +1249,7 @@ namespace Scrabble.LibMpc
                             }
                             break;
                         case "audio":
-                            Match match = STATUS_AUDIO_REGEX.Match(line.Value);
+                            var match = STATUS_AUDIO_REGEX.Match(line.Value);
                             if (match.Success)
                             {
                                 int tryValue;

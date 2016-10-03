@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Net;
 using System.Threading;
 using Mono.Unix;
 using Mono.Unix.Native;
-using Nancy.Hosting.Self;
 using Scrabble.Config;
-using Scrabble.LibMpc;
 
 namespace Scrabble {
     class Program {
@@ -41,7 +38,7 @@ namespace Scrabble {
                 Console.ReadLine();
             }
 
-            Configuration.Instance.SendStopSignal();
+            Configuration.SendStopSignal();
 
         }
 

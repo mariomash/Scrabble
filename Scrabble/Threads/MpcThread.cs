@@ -4,46 +4,10 @@ using System.Net;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Xml.Serialization;
-using Nancy.Hosting.Self;
 using Scrabble.Config;
 using Scrabble.LibMpc;
 
 namespace Scrabble.Threads {
-    public class WebThread : BasicModule, IThread {
-        public string ServerUri;
-        private bool _stopSignal;
-
-        [XmlIgnore]
-        [IgnoreDataMember]
-        public NancyHost Host;
-
-        public WebThread()
-        {
-            ServerUri = @"http://localhost:8888";
-            _stopSignal = false;
-        }
-
-        private void Configuration_StopSignal(Configuration configuration)
-        {
-            _stopSignal = true;
-
-            Configuration.Logger.Log(LogType.Verbose, $"Stopping {this}");
-            Host.Stop();
-        }
-
-        public void WorkItem()
-        {
-
-            Configuration.Logger.Log(LogType.Verbose, $"Starting {this}");
-
-            Configuration.StopSignal += Configuration_StopSignal;
-
-            Host = new NancyHost(new Uri(ServerUri));
-            Host.Start();
-
-        }
-    }
-
     public class MpcThread : BasicModule, IThread {
 
         public int ServerPort, DelayInMs;
@@ -89,8 +53,11 @@ namespace Scrabble.Threads {
 
             Configuration.StopSignal += Configuration_StopSignal;
 
+            Mpc.Connection.Connect();
+
             while (Active)
             {
+
                 try
                 {
 
@@ -105,8 +72,9 @@ namespace Scrabble.Threads {
                 {
                     Configuration.Logger.Log(LogType.Error, $"{ex.Message}", new StackTrace());
                 }
+
                 Thread.Sleep(TimeSpan.FromMilliseconds(DelayInMs));
-                //mpc.Connection.Connect();
+
             }
 
         }
@@ -120,7 +88,8 @@ namespace Scrabble.Threads {
         private void Mpc_OnConnected(Mpc mpc)
         {
             //https://play.spotify.com/track/1TK7llLvbHOVYxfcnEN6HK
-            mpc.Add(@"spotify:track:1TK7llLvbHOVYxfcnEN6HK");
+            //mpc.Add(@"spotify:track:1TK7llLvbHOVYxfcnEN6HK");
+            mpc.Add(@"kasumi.mp3");
             mpc.Play();
         }
     }

@@ -225,7 +225,7 @@ namespace Scrabble.LibMpc
             int id)
         {
             if (file == null)
-                throw new ArgumentNullException("file");
+                throw new ArgumentNullException(nameof(file));
 
             this.file = file;
             this.time = time;
@@ -249,7 +249,7 @@ namespace Scrabble.LibMpc
         /// <returns></returns>
         public override string ToString()
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
 
             appendString(builder, TAG_FILE, file);
             if (HasTime)
@@ -307,26 +307,26 @@ namespace Scrabble.LibMpc
         public static MpdFile build(MpdResponse response)
         {
             if (response == null)
-                throw new ArgumentNullException("response");
+                throw new ArgumentNullException(nameof(response));
 
             string file = null;
-            int time = NO_TIME;
-            string album = NO_ALBUM;
-            string artist = NO_ARTIST;
-            string title = NO_TITLE;
-            string track = NO_TRACK;
-            string name = NO_NAME;
-            string genre = NO_GENRE;
-            string date = NO_DATE;
-            string composer = NO_COMPOSER;
-            string performer = NO_PERFORMER;
-            string comment = NO_COMMENT;
-            int disc = NO_DISC;
-            int pos = NO_POS;
-            int id = NO_ID;
+            var time = NO_TIME;
+            var album = NO_ALBUM;
+            var artist = NO_ARTIST;
+            var title = NO_TITLE;
+            var track = NO_TRACK;
+            var name = NO_NAME;
+            var genre = NO_GENRE;
+            var date = NO_DATE;
+            var composer = NO_COMPOSER;
+            var performer = NO_PERFORMER;
+            var comment = NO_COMMENT;
+            var disc = NO_DISC;
+            var pos = NO_POS;
+            var id = NO_ID;
 
 
-            foreach (KeyValuePair<string, string> line in response)
+            foreach (var line in response)
             {
                 if( line.Key != null )
                     switch (line.Key)
@@ -414,28 +414,28 @@ namespace Scrabble.LibMpc
         public static List<MpdFile> buildList(MpdResponse response)
         {
             if (response == null)
-                throw new ArgumentNullException("response");
+                throw new ArgumentNullException(nameof(response));
 
-            List<MpdFile> ret = new List<MpdFile>();
+            var ret = new List<MpdFile>();
 
             string file = null;
-            int time = NO_TIME;
-            string album = NO_ALBUM;
-            string artist = NO_ARTIST;
-            string title = NO_TITLE;
-            string track = NO_TRACK;
-            string name = NO_NAME;
-            string genre = NO_GENRE;
-            string date = NO_DATE;
-            string composer = NO_COMPOSER;
-            string performer = NO_PERFORMER;
-            string comment = NO_COMMENT;
-            int disc = NO_DISC;
-            int pos = NO_POS;
-            int id = NO_ID;
+            var time = NO_TIME;
+            var album = NO_ALBUM;
+            var artist = NO_ARTIST;
+            var title = NO_TITLE;
+            var track = NO_TRACK;
+            var name = NO_NAME;
+            var genre = NO_GENRE;
+            var date = NO_DATE;
+            var composer = NO_COMPOSER;
+            var performer = NO_PERFORMER;
+            var comment = NO_COMMENT;
+            var disc = NO_DISC;
+            var pos = NO_POS;
+            var id = NO_ID;
 
 
-            foreach (KeyValuePair<string, string> line in response)
+            foreach (var line in response)
             {
                 if( line.Key != null )
                     switch (line.Key)
