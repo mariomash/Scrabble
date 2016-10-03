@@ -4,8 +4,8 @@ using System.Threading;
 using Mono.Unix;
 using Mono.Unix.Native;
 using Nancy.Hosting.Self;
+using Scrabble.Config;
 using Scrabble.LibMpc;
-using static Scrabble.Config.Configuration;
 
 namespace Scrabble {
     class Program {
@@ -15,28 +15,14 @@ namespace Scrabble {
             // Please remember that there's also a singleton Configuration that should be
             // already initialized...
 
-            var threadHiloAutoMonitor = new Thread(Instance.MonitorThread.WorkItem);
-            threadHiloAutoMonitor.Start();
+            var monitorThread = new Thread(Configuration.Instance.MonitorThread.WorkItem);
+            monitorThread.Start();
 
-            var mpc = new Mpc
-            {
-                Connection = new MpcConnection
-                {
-                    Server = new IPEndPoint(IPAddress.Parse(@"127.0.0.1"), 6600),
-                    AutoConnect = false
-                }
-            };
+            var mpcThread = new Thread(Configuration.Instance.MpcThread.WorkItem);
+            mpcThread.Start();
 
-            mpc.OnConnected += Mpc_OnConnected;
-
-            //mpc.Connection.Connect();
-
-            const string uri = "http://localhost:8888";
-            Console.WriteLine("Starting Nancy on " + uri);
-
-            // initialize an instance of NancyHost
-            var host = new NancyHost(new Uri(uri));
-            host.Start();  // start hosting
+            var webThread = new Thread(Configuration.Instance.WebThread.WorkItem);
+            webThread.Start();
 
             // check if we're running on mono
             if (Type.GetType("Mono.Runtime") != null)
@@ -55,17 +41,9 @@ namespace Scrabble {
                 Console.ReadLine();
             }
 
-            Console.WriteLine("Stopping");
-            host.Stop();  // stop hosting
-            Instance.StopSignal = true;
+            Configuration.Instance.SendStopSignal();
 
         }
 
-        private static void Mpc_OnConnected(Mpc mpc)
-        {
-            //https://play.spotify.com/track/1TK7llLvbHOVYxfcnEN6HK
-            mpc.Add(@"spotify:track:1TK7llLvbHOVYxfcnEN6HK");
-            mpc.Play();
-        }
     }
 }

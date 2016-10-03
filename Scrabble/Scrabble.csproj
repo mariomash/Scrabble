@@ -63,6 +63,7 @@
     <Compile Include="Config\LogEntry.cs" />
     <Compile Include="Config\Logger.cs" />
     <Compile Include="Config\LogType.cs" />
+    <Compile Include="Threads\MpcThread.cs" />
     <Compile Include="Config\Utils.cs" />
     <Compile Include="HelloModule.cs" />
     <Compile Include="LibMpc\Enum.cs" />

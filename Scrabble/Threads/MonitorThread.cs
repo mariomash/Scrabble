@@ -8,12 +8,19 @@ namespace Scrabble.Threads {
 
         public int DelayInMs, ForceExitEachHours;
         public string SnapshotFileName;
+        private bool _stopSignal;
 
         public MonitorThread()
         {
             DelayInMs = 1000;
             ForceExitEachHours = 0;
             SnapshotFileName = "snapshot.xml";
+            _stopSignal = false;
+        }
+
+        private void Configuration_StopSignal(Configuration configuration)
+        {
+            _stopSignal = true;
         }
 
         public void WorkItem()
@@ -21,12 +28,14 @@ namespace Scrabble.Threads {
             var i = 0;
             Configuration.Logger.Log(LogType.Verbose, $"Starting {this}");
 
+            Configuration.StopSignal += Configuration_StopSignal;
+
             while (Active)
             {
                 try
                 {
 
-                    if (Configuration.StopSignal)
+                    if (_stopSignal)
                     {
                         Configuration.Logger.Log(LogType.Verbose, $"Stopping {this}");
                         return;

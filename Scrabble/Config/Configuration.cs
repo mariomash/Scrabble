@@ -68,7 +68,7 @@ namespace Scrabble.Config {
 
         }
 
-        public static void SaveSnapshot()
+        public void SaveSnapshot()
         {
             try
             {
@@ -99,6 +99,11 @@ namespace Scrabble.Config {
             }
         }
 
+        public void SendStopSignal()
+        {
+            Instance.StopSignal(Instance);
+        }
+
         //[XmlText]
         [XmlAttribute]
         public DateTime SerializedTimestamp {
@@ -110,11 +115,17 @@ namespace Scrabble.Config {
         [IgnoreDataMember]
         public DateTime LastStartup { get; set; }
 
-        public bool StopSignal { get; set; }
-
         public MonitorThread MonitorThread { get; set; }
 
+        public MpcThread MpcThread { get; set; }
+
+        public WebThread WebThread { get; set; }
+
         public Logger Logger { get; set; }
+
+        public event StopSignalHandler StopSignal;
+
+        public delegate void StopSignalHandler(Configuration configuration);
 
     }
 }

@@ -28,23 +28,30 @@ namespace Scrabble.Config {
             Active = false;
             MaximumLogEntriesInMemory = 1000;
             Threshold = LogType.Info;
+            LogEntries = new ConcurrentDictionary<Guid, LogEntry>();
+            SerializedLogEntries = new List<LogEntry>();
         }
 
-        public void Log(LogType logType, string message, StackTrace stack = null)
+        public void Log(LogType logType, string message, StackTrace stackTrace = null)
         {
 
             if (!Active) return;
 
             try
             {
+                var msg = message;
+                if (stackTrace != null) msg = $"{msg} - {stackTrace}";
 
-                SaveToLogFile($"{logType} - {message}");
+                Console.WriteLine($"{logType} - {msg}");
+
+                SaveToLogFile($"{logType} - {msg}");
 
                 if (logType < Threshold) return;
 
-                var logEntry = new LogEntry {
+                var logEntry = new LogEntry
+                {
                     Tipo = logType,
-                    StackTrace = stack?.ToString(),
+                    StackTrace = stackTrace?.ToString(),
                     Message = message,
                     Timestamp = DateTime.Now
                 };
