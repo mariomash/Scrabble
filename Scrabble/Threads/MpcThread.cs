@@ -53,10 +53,10 @@ namespace Scrabble.Threads {
 
             Configuration.StopSignal += Configuration_StopSignal;
 
-            Mpc.Connection.Connect();
-
-            while (Active)
+            while (true)
             {
+                if (!Active)
+                    continue;
 
                 try
                 {
@@ -66,6 +66,9 @@ namespace Scrabble.Threads {
                         Configuration.Logger.Log(LogType.Verbose, $"Stopping {this}");
                         return;
                     }
+
+                    if (!Mpc.Connected)
+                        Mpc.Connection.Connect();
 
                 }
                 catch (Exception ex)
