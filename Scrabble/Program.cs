@@ -10,7 +10,7 @@ namespace Scrabble {
         {
 
             // Please remember that there's also a singleton Configuration that should be
-            // already initialized...
+            // initialized when you first access...
 
             var monitorThread = new Thread(Configuration.Instance.MonitorThread.WorkItem);
             monitorThread.Start();

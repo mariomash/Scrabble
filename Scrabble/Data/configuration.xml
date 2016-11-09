@@ -8,11 +8,11 @@
   <MonitorThread>
     <Active>true</Active>
     <DelayInMs>2000</DelayInMs>
-    <SnapshotFileName>Snapshot.xml</SnapshotFileName>
+    <SnapshotFileName>snapshot.xml</SnapshotFileName>
     <ForceExitEachHours>0</ForceExitEachHours>
   </MonitorThread>
   <MpcThread>
-    <Active>true</Active>
+    <Active>false</Active>
     <DelayInMs>100</DelayInMs>
     <ServerPort>6600</ServerPort>
     <ServerAdress>127.0.0.1</ServerAdress>

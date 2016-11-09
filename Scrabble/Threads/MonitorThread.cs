@@ -30,8 +30,11 @@ namespace Scrabble.Threads {
 
             Configuration.StopSignal += Configuration_StopSignal;
 
-            while (Active)
+            while (true)
             {
+                if (!Active)
+                    continue;
+
                 try
                 {
 
