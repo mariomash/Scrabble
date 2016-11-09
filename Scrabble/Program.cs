@@ -3,6 +3,7 @@ using System.Threading;
 using Mono.Unix;
 using Mono.Unix.Native;
 using Scrabble.Config;
+using System.Linq;
 
 namespace Scrabble {
     class Program {
@@ -20,6 +21,21 @@ namespace Scrabble {
 
             var webThread = new Thread(Configuration.Instance.WebThread.WorkItem);
             webThread.Start();
+
+			var context = new SharpNFC.NFCContext();
+			var device = context.OpenDevice(context.ListDeviceNames().FirstOrDefault());
+			var nfcTarget = new SharpNFC.PInvoke.nfc_target();
+			var list = new System.Collections.Generic.List<SharpNFC.PInvoke.nfc_modulation>();
+			list.Add(new SharpNFC.PInvoke.nfc_modulation() {
+				nbr = SharpNFC.PInvoke.nfc_baud_rate.NBR_106,
+				nmt = SharpNFC.PInvoke.nfc_modulation_type.NMT_ISO14443A
+			});
+			device.Pool(
+				list,
+				100,
+				100,
+				out nfcTarget);
+			var eo = nfcTarget.nti.szAtsLen;
 
             // check if we're running on mono
             if (Type.GetType("Mono.Runtime") != null)
