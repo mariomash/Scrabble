@@ -85,7 +85,12 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\SharpNFC\SharpNFC.csproj">
+      <Project>{9f95a8ac-e831-4840-9b85-702e2f4aac28}</Project>
+      <Name>SharpNFC</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Data\configuration.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
