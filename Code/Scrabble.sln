@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scrabble", "Scrabble\Scrabb
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scrabble Server", "Scrabble Server\Scrabble Server.csproj", "{8C131933-30B9-4EFA-BE3A-3F446227DA92}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpNFC", "SharpNFC\SharpNFC.csproj", "{9F95A8AC-E831-4840-9B85-702E2F4AAC28}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{8C131933-30B9-4EFA-BE3A-3F446227DA92}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C131933-30B9-4EFA-BE3A-3F446227DA92}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C131933-30B9-4EFA-BE3A-3F446227DA92}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9F95A8AC-E831-4840-9B85-702E2F4AAC28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9F95A8AC-E831-4840-9B85-702E2F4AAC28}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9F95A8AC-E831-4840-9B85-702E2F4AAC28}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9F95A8AC-E831-4840-9B85-702E2F4AAC28}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

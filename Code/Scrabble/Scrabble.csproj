@@ -63,6 +63,24 @@
     <Compile Include="Config\LogEntry.cs" />
     <Compile Include="Config\Logger.cs" />
     <Compile Include="Config\LogType.cs" />
+    <Compile Include="SharpNFC\NFCContext.cs" />
+    <Compile Include="SharpNFC\NFCDevice.cs" />
+    <Compile Include="SharpNFC\PInvoke\Constants.cs" />
+    <Compile Include="SharpNFC\PInvoke\Functions.cs" />
+    <Compile Include="SharpNFC\PInvoke\nfc_baud_rate.cs" />
+    <Compile Include="SharpNFC\PInvoke\nfc_context.cs" />
+    <Compile Include="SharpNFC\PInvoke\nfc_dep_info.cs" />
+    <Compile Include="SharpNFC\PInvoke\nfc_dep_mode.cs" />
+    <Compile Include="SharpNFC\PInvoke\nfc_device.cs" />
+    <Compile Include="SharpNFC\PInvoke\nfc_driver.cs" />
+    <Compile Include="SharpNFC\PInvoke\nfc_iso14443a_info.cs" />
+    <Compile Include="SharpNFC\PInvoke\nfc_mode.cs" />
+    <Compile Include="SharpNFC\PInvoke\nfc_modulation.cs" />
+    <Compile Include="SharpNFC\PInvoke\nfc_modulation_type.cs" />
+    <Compile Include="SharpNFC\PInvoke\nfc_property.cs" />
+    <Compile Include="SharpNFC\PInvoke\nfc_target.cs" />
+    <Compile Include="SharpNFC\PInvoke\nfc_user_defined_device.cs" />
+    <Compile Include="SharpNFC\PInvoke\scan_type_enum.cs" />
     <Compile Include="Threads\MpcThread.cs" />
     <Compile Include="Config\Utils.cs" />
     <Compile Include="HelloModule.cs" />
@@ -84,12 +102,6 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SharpNFC\SharpNFC.csproj">
-      <Project>{9f95a8ac-e831-4840-9b85-702e2f4aac28}</Project>
-      <Name>SharpNFC</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Data\configuration.xml">
