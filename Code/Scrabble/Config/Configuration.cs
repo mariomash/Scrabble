@@ -18,6 +18,12 @@ namespace Scrabble.Config {
 
         static Configuration()
         {
+            //    Instance.Logger = new Logger();
+            //    Instance.MonitorThread = new MonitorThread();
+            //    Instance.MpcThread = new MpcThread();
+            //    Instance.NfcThread = new NfcThread();
+            //    Instance.WebThread = new WebThread();
+
 
             var utils = new Utils();
 
@@ -92,10 +98,7 @@ namespace Scrabble.Config {
             }
             catch (Exception ex)
             {
-                var message = ex.Message;
-                if (ex.InnerException != null) message = $"{message} - {ex.InnerException.Message}";
-
-                Instance.Logger.Log(LogType.Error, $"{message}", new StackTrace());
+                Instance.Logger.Log(LogType.Error, $"{ex}");
             }
         }
 
@@ -120,6 +123,8 @@ namespace Scrabble.Config {
         public MpcThread MpcThread { get; set; }
 
         public WebThread WebThread { get; set; }
+
+        public NfcThread NfcThread { get; set; }
 
         public Logger Logger { get; set; }
 

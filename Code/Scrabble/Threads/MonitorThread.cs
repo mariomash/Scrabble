@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading;
 using Scrabble.Config;
 
@@ -32,17 +31,17 @@ namespace Scrabble.Threads {
 
             while (true)
             {
+                if (_stopSignal)
+                {
+                    Configuration.Logger.Log(LogType.Verbose, $"Stopping {this}");
+                    return;
+                }
+
                 if (!Active)
                     continue;
 
                 try
                 {
-
-                    if (_stopSignal)
-                    {
-                        Configuration.Logger.Log(LogType.Verbose, $"Stopping {this}");
-                        return;
-                    }
 
                     Configuration.SaveSnapshot();
 
@@ -57,7 +56,7 @@ namespace Scrabble.Threads {
                 }
                 catch (Exception ex)
                 {
-                    Configuration.Logger.Log(LogType.Error, $"{ex.Message}", new StackTrace());
+                    Configuration.Logger.Log(LogType.Error, $"{ex}");
                 }
                 Thread.Sleep(TimeSpan.FromMilliseconds(DelayInMs));
 

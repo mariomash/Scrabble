@@ -32,26 +32,23 @@ namespace Scrabble.Config {
             SerializedLogEntries = new List<LogEntry>();
         }
 
-        public void Log(LogType logType, string message, StackTrace stackTrace = null)
+        public void Log(LogType logType, string message)
         {
 
             if (!Active) return;
 
             try
             {
-                var msg = message;
-                if (stackTrace != null) msg = $"{msg} - {stackTrace}";
+                
+                Console.WriteLine($"{logType} - {message}");
 
-                Console.WriteLine($"{logType} - {msg}");
-
-                SaveToLogFile($"{logType} - {msg}");
+                SaveToLogFile($"{logType} - {message}");
 
                 if (logType < Threshold) return;
 
                 var logEntry = new LogEntry
                 {
                     Tipo = logType,
-                    StackTrace = stackTrace?.ToString(),
                     Message = message,
                     Timestamp = DateTime.Now
                 };
@@ -61,7 +58,7 @@ namespace Scrabble.Config {
             }
             catch (Exception ex)
             {
-                SaveToLogFile($"{LogType.Error} - {ex.Message} - {ex.StackTrace}");
+                SaveToLogFile($"{LogType.Error} - {ex}");
             }
         }
 

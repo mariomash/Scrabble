@@ -13,6 +13,5 @@ namespace Scrabble.Config
         public DateTime Timestamp { get; set; }
         public LogType Tipo { get; set; }
         public string Message { get; set; }
-        public string StackTrace { get; set; }
     }
 }

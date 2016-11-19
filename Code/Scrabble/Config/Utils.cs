@@ -28,11 +28,8 @@ namespace Scrabble.Config {
             }
             catch (Exception ex)
             {
-
-                var exMessage = ex.Message;
-                if (ex.InnerException != null) exMessage = ex.InnerException.Message;
-
-                Configuration.Instance.Logger.Log(LogType.Error, $"{exMessage}", new StackTrace());
+                
+                Configuration.Instance.Logger.Log(LogType.Error, $"{ex}");
 
                 try
                 {
