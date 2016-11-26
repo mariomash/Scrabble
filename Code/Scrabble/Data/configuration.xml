@@ -1,28 +1,29 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Logger>
-    <Active>true</Active>
-    <MaximumLogEntriesInMemory>1000</MaximumLogEntriesInMemory>
-    <Threshold>Info</Threshold>
-  </Logger>
-  <MonitorThread>
-    <Active>true</Active>
-    <DelayInMs>2000</DelayInMs>
-    <SnapshotFileName>snapshot.xml</SnapshotFileName>
-    <ForceExitEachHours>0</ForceExitEachHours>
-  </MonitorThread>
-  <MpcThread>
-    <Active>false</Active>
-    <DelayInMs>100</DelayInMs>
-    <ServerPort>6600</ServerPort>
-    <ServerAdress>127.0.0.1</ServerAdress>
-  </MpcThread>
-  <NfcThread>
-    <Active>true</Active>
-    <DelayInMs>100</DelayInMs>
-  </NfcThread>
-  <WebThread>
-    <Active>true</Active>
-    <ServerUri>http://localhost:8888</ServerUri>
-  </WebThread>
+	<UseSnapshot>false</UseSnapshot>
+	<Logger>
+		<Active>true</Active>
+		<MaximumLogEntriesInMemory>1000</MaximumLogEntriesInMemory>
+		<Threshold>Info</Threshold>
+	</Logger>
+	<MonitorThread>
+		<Active>true</Active>
+		<DelayInMs>2000</DelayInMs>
+		<SnapshotFileName>snapshot.xml</SnapshotFileName>
+		<ForceExitEachHours>0</ForceExitEachHours>
+	</MonitorThread>
+	<MpcThread>
+		<Active>false</Active>
+		<DelayInMs>100</DelayInMs>
+		<ServerPort>6600</ServerPort>
+		<ServerAdress>127.0.0.1</ServerAdress>
+	</MpcThread>
+	<NfcThread>
+		<Active>true</Active>
+		<DelayInMs>5000</DelayInMs>
+	</NfcThread>
+	<WebThread>
+		<Active>true</Active>
+		<ServerUri>http://localhost:8888</ServerUri>
+	</WebThread>
 </Configuration>

@@ -6,93 +6,95 @@ using System.Xml.Serialization;
 using Scrabble.Config;
 using Scrabble.LibMpc;
 
-namespace Scrabble.Threads {
-    public class MpcThread : BasicModule, IThread {
+namespace Scrabble.Threads
+{
+	public class MpcThread : BasicModule, IThread
+	{
 
-        public int ServerPort, DelayInMs;
-        public string ServerAdress;
-        private bool _stopSignal;
+		public int ServerPort, DelayInMs;
+		public string ServerAdress;
+		bool _stopSignal;
 
-        [XmlIgnore]
-        [IgnoreDataMember]
-        public Mpc Mpc;
+		[XmlIgnore]
+		[IgnoreDataMember]
+		public Mpc Mpc;
 
-        public MpcThread()
-        {
-            ServerAdress = @"127.0.0.1";
-            ServerPort = 6600;
-            _stopSignal = false;
+		public MpcThread()
+		{
+			ServerAdress = @"127.0.0.1";
+			ServerPort = 6600;
+			_stopSignal = false;
 
-            Mpc = new Mpc
-            {
-                Connection = new MpcConnection
-                {
-                    Server = new IPEndPoint(
-                        IPAddress.Parse(ServerAdress),
-                        ServerPort),
-                    AutoConnect = false
-                }
-            };
+			Mpc = new Mpc
+			{
+				Connection = new MpcConnection
+				{
+					Server = new IPEndPoint(
+						IPAddress.Parse(ServerAdress),
+						ServerPort),
+					AutoConnect = false
+				}
+			};
 
-            Mpc.OnConnected += Mpc_OnConnected;
+			Mpc.OnConnected += Mpc_OnConnected;
 
-            Mpc.OnDisconnected += Mpc_OnDisconnected;
+			Mpc.OnDisconnected += Mpc_OnDisconnected;
 
-        }
+		}
 
-        private void Configuration_StopSignal(Configuration configuration)
-        {
-            _stopSignal = true;
-            Mpc.Connection.Disconnect();
-        }
+		void Configuration_StopSignal(Configuration configuration)
+		{
+			_stopSignal = true;
+			Mpc.Connection.Disconnect();
+		}
 
-        public void WorkItem()
-        {
-            Configuration.Logger.Log(LogType.Verbose, $"Starting {this}");
+		public void WorkItem()
+		{
+			Configuration.Logger.Log(LogType.Verbose, $"Starting {this}");
 
-            Configuration.StopSignal += Configuration_StopSignal;
+			Configuration.StopSignal += Configuration_StopSignal;
 
-            while (true)
-            {
-                if (_stopSignal)
-                {
-                    Configuration.Logger.Log(LogType.Verbose, $"Stopping {this}");
-                    return;
-                }
+			while (true)
+			{
+				if (_stopSignal)
+				{
+					Configuration.Logger.Log(LogType.Verbose, $"Stopping {this}");
+					return;
+				}
 
-                if (!Active)
-                    continue;
+				if (!Active)
+					continue;
 
-                try
-                {
+				try
+				{
 
-                    if (!Mpc.Connected)
-                        Mpc.Connection.Connect();
+					if (!Mpc.Connected)
+						Mpc.Connection.Connect();
 
-                }
-                catch (Exception ex)
-                {
-                    Configuration.Logger.Log(LogType.Error, $"{ex}");
-                }
+				}
+				catch (Exception ex)
+				{
+					Configuration.Logger.Log(LogType.Error, $"{ex}");
+				}
 
-                Thread.Sleep(TimeSpan.FromMilliseconds(DelayInMs));
+				Thread.Sleep(TimeSpan.FromMilliseconds(DelayInMs));
 
-            }
+			}
 
-        }
+		}
 
-        private void Mpc_OnDisconnected(Mpc mpc)
-        {
-            if (!_stopSignal)
-                mpc.Connection.Connect();
-        }
+		void Mpc_OnDisconnected(Mpc mpc)
+		{
+			if (!_stopSignal)
+				mpc.Connection.Connect();
+		}
 
-        private void Mpc_OnConnected(Mpc mpc)
-        {
-            //https://play.spotify.com/track/1TK7llLvbHOVYxfcnEN6HK
-            //mpc.Add(@"spotify:track:1TK7llLvbHOVYxfcnEN6HK");
-            mpc.Add(@"kasumi.mp3");
-            mpc.Play();
-        }
-    }
+		void Mpc_OnConnected(Mpc mpc)
+		{
+			//https://play.spotify.com/track/1TK7llLvbHOVYxfcnEN6HK
+			//mpc.Add(@"spotify:track:1TK7llLvbHOVYxfcnEN6HK");
+			mpc.Add(@"kasumi.mp3");
+			mpc.Play();
+		}
+	}
 }

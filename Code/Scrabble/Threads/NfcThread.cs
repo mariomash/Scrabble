@@ -9,7 +9,7 @@ namespace Scrabble.Threads
 	{
 
 		public int DelayInMs;
-		private bool _stopSignal;
+		bool _stopSignal;
 
 		public NfcThread()
 		{
@@ -17,7 +17,7 @@ namespace Scrabble.Threads
 			_stopSignal = false;
 		}
 
-		private void Configuration_StopSignal(Configuration configuration)
+		void Configuration_StopSignal(Configuration configuration)
 		{
 			_stopSignal = true;
 		}
@@ -30,7 +30,6 @@ namespace Scrabble.Threads
 				using (var context = new SharpNFC.NFCContext())
 				{
 					var deviceName = context.ListDeviceNames().FirstOrDefault();
-					Configuration.Instance.Logger.Log(LogType.Verbose, $"Primer Device existente: {deviceName}");
 					using (var device = context.OpenDevice(deviceName))
 					{
 						var list = new System.Collections.Generic.List<SharpNFC.PInvoke.nfc_modulation>()
@@ -49,9 +48,10 @@ namespace Scrabble.Threads
 							100,
 							out nfcTarget);
 
-						Configuration.Instance.Logger.Log(LogType.Verbose, $"nfcTarget resultante {string.Join(",", nfcTarget.nti.abtUid)}");
+						Configuration.Instance.Logger.Log(LogType.Verbose, $"-POLL--------{Environment.NewLine}Device: {deviceName}{Environment.NewLine}ID ==> {string.Join(":", nfcTarget.nti.abtUid)}{Environment.NewLine}");
 
-						Configuration.Instance.Logger.Log(LogType.Verbose, $"nfcTarget.nti.szAtsLen {nfcTarget.nti.szAtsLen}");
+						//Configuration.Instance.Logger.Log(LogType.Verbose, $"nfcTarget.nti.szAtsLen {nfcTarget.nti.szAtsLen}");
+
 					}
 				}
 			}
@@ -70,28 +70,13 @@ namespace Scrabble.Threads
 				using (var context = new SharpNFC.NFCContext())
 				{
 					var deviceName = context.ListDeviceNames().FirstOrDefault();
-					Configuration.Instance.Logger.Log(LogType.Verbose, $"Primer Device: {deviceName}");
 					using (var device = context.OpenDevice(deviceName))
 					{
-						var list = new System.Collections.Generic.List<SharpNFC.PInvoke.nfc_modulation>()
-							{
-								new SharpNFC.PInvoke.nfc_modulation()
-								{
-									nbr = SharpNFC.PInvoke.nfc_baud_rate.NBR_106,
-									nmt = SharpNFC.PInvoke.nfc_modulation_type.NMT_ISO14443A
-								}
-							};
 
-						SharpNFC.PInvoke.nfc_target nfcTarget;
-						device.Poll(
-							list,
-							1,
-							100,
-							out nfcTarget);
+						var listIDs = device.PollWithHalt();
 
-						Configuration.Instance.Logger.Log(LogType.Verbose, $"nfcTarget resultante {string.Join(",", nfcTarget.nti.abtUid)}");
+						Configuration.Instance.Logger.Log(LogType.Verbose, $"-POLLHALT----{Environment.NewLine}Primer Device: {deviceName}{Environment.NewLine}IDs ==> {string.Join(",", listIDs)}{Environment.NewLine}");
 
-						Configuration.Instance.Logger.Log(LogType.Verbose, $"nfcTarget.nti.szAtsLen {nfcTarget.nti.szAtsLen}");
 					}
 				}
 			}
@@ -125,6 +110,7 @@ namespace Scrabble.Threads
 				{
 					Configuration.Logger.Log(LogType.Verbose, $"{DateTime.Now} ejecutando {this}");
 
+					Poll();
 					PollWithHalt();
 
 				}
