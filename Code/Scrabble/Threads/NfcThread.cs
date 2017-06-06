@@ -16,6 +16,11 @@ namespace Scrabble.Threads
 
 		readonly byte[] EchoCommand = { 0x55 };
 		readonly byte[] IdnCommand = { 0x01, 0x00 };
+		readonly byte[] FieldOffCommand = { 0x02, 0x02, 0x00, 0x00 };
+		readonly byte[] InventoryCommand = { 0x04, 0x03, 0x26, 0x01, 0x00 };
+		readonly byte[] ProtocolSelectISO15693Command = { 0x02, 0x02, 0x01, 0x05 };
+		readonly byte[] ProtocolSelectISO14443ACommand = { 0x02, 0x02, 0x02, 0x00 };
+		readonly byte[] ProtocolSelectISO14443BCommand = { 0x02, 0x02, 0x03, 0x01 };
 
 		public int DelayInMs;
 		bool _stopSignal;
@@ -110,7 +115,7 @@ namespace Scrabble.Threads
 				}
 
 				if (bytes.Any())
-					Configuration.Logger.Log(LogType.Verbose, $"{_serialPort.PortName} >> {System.Text.Encoding.Default.GetString(bytes.ToArray())} || {String.Join("-", bytes)} || {BitConverter.ToString(bytes.ToArray())}");
+					Configuration.Logger.Log(LogType.Verbose, $"{_serialPort.PortName} >> String: {System.Text.Encoding.Default.GetString(bytes.ToArray())} || Dec:{String.Join("-", bytes)} || Hex:{BitConverter.ToString(bytes.ToArray())}");
 			}
 		}
 
@@ -172,6 +177,15 @@ namespace Scrabble.Threads
 					}
 
 					SerialDataWrite(IdnCommand);
+					Thread.Sleep(1000);
+
+					SerialDataWrite(ProtocolSelectISO15693Command);
+					Thread.Sleep(1000);
+
+					SerialDataWrite(InventoryCommand);
+					Thread.Sleep(1000);
+
+					SerialDataWrite(FieldOffCommand);
 					Thread.Sleep(1000);
 
 					Console.WriteLine("Press any key to finish...");
