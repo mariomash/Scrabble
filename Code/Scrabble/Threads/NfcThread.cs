@@ -2,11 +2,20 @@
 using System.Linq;
 using System.Threading;
 using Scrabble.Config;
+using System.IO.Ports;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Scrabble.Threads
 {
 	public class NfcThread : BasicModule, IThread
 	{
+		static SerialPort _serialPort;
+		static Thread _SerialDataCheckThread;
+		bool _SerialDataCheckActivated;
+
+		readonly byte[] EchoCommand = { 0x55 };
+		readonly byte[] IdnCommand = { 0x01, 0x00 };
 
 		public int DelayInMs;
 		bool _stopSignal;
@@ -22,6 +31,7 @@ namespace Scrabble.Threads
 			_stopSignal = true;
 		}
 
+		/*
 		public void Poll()
 		{
 
@@ -61,7 +71,6 @@ namespace Scrabble.Threads
 			}
 
 		}
-
 		public void PollWithHalt()
 		{
 
@@ -85,6 +94,30 @@ namespace Scrabble.Threads
 				Configuration.Logger.Log(LogType.Error, $"{ex}");
 			}
 
+		}
+		*/
+
+		public void SerialDataCheckThread()
+		{
+			while (_SerialDataCheckActivated)
+			{
+				var bytes = new List<byte>();
+				while (_serialPort.BytesToRead != 0)
+				{
+					var tmpByte = (byte)_serialPort.ReadByte();
+					bytes.Add(tmpByte);
+					Thread.Sleep(20);
+				}
+
+				if (bytes.Any())
+					Configuration.Logger.Log(LogType.Verbose, $"{_serialPort.PortName} >> {System.Text.Encoding.Default.GetString(bytes.ToArray())} || {String.Join("-", bytes)} || {BitConverter.ToString(bytes.ToArray())}");
+			}
+		}
+
+		public void SerialDataWrite(byte[] data)
+		{
+			Configuration.Logger.Log(LogType.Verbose, $"{_serialPort.PortName} << {BitConverter.ToString(data.ToArray())}");
+			_serialPort.Write(data, 0, data.Length);
 		}
 
 		public void WorkItem()
@@ -110,8 +143,43 @@ namespace Scrabble.Threads
 				{
 					Configuration.Logger.Log(LogType.Verbose, $"{DateTime.Now} ejecutando {this}");
 
-					Poll();
-					PollWithHalt();
+					if (_serialPort == null)
+						_serialPort = new SerialPort("/dev/ttyAMA0")
+						{
+							BaudRate = 57600,
+							//Parity = Parity.None,
+							//StopBits = StopBits.One,
+							//DataBits = 8,
+							//Handshake = Handshake.None
+							//ReadTimeout = 400,
+							//WriteTimeout = 400,
+						};
+
+					if (!_serialPort.IsOpen)
+						_serialPort.Open();
+
+					_SerialDataCheckActivated = true;
+					if (_SerialDataCheckThread == null)
+						_SerialDataCheckThread = new Thread(SerialDataCheckThread);
+
+					if (_SerialDataCheckThread.ThreadState != ThreadState.Running)
+						_SerialDataCheckThread.Start();
+
+					for (var i = 0; i < 5; i++)
+					{
+						SerialDataWrite(EchoCommand);
+						Thread.Sleep(500);
+					}
+
+					SerialDataWrite(IdnCommand);
+					Thread.Sleep(1000);
+
+					Console.WriteLine("Press any key to finish...");
+					Console.WriteLine();
+					Console.ReadKey();
+
+					//Poll();
+					//PollWithHalt();
 
 				}
 				catch (Exception ex)
