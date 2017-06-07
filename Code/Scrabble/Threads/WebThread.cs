@@ -6,39 +6,36 @@ using Scrabble.Config;
 
 namespace Scrabble.Threads
 {
-    public class WebThread : BasicModule, IThread {
-        public string ServerUri;
-        private bool _stopSignal;
+	public class WebThread : BasicModule, IThread
+	{
+		public string ServerUri;
 
-        [XmlIgnore]
-        [IgnoreDataMember]
-        public NancyHost Host;
+		[XmlIgnore]
+		[IgnoreDataMember]
+		public NancyHost Host;
 
-        public WebThread()
-        {
-            ServerUri = @"http://localhost:8888";
-            _stopSignal = false;
-        }
+		public WebThread()
+		{
+			ServerUri = @"http://localhost:8888";
+		}
 
-        private void Configuration_StopSignal(Configuration configuration)
-        {
-            _stopSignal = true;
+		private void Configuration_StopSignal(Configuration configuration)
+		{
+			Configuration.Logger.Log(LogType.Verbose, $"Stopping {this}");
+			Host.Stop();
+			Host.Dispose();
+		}
 
-            Configuration.Logger.Log(LogType.Verbose, $"Stopping {this}");
-            Host.Stop();
-            Host.Dispose();
-        }
+		public void WorkItem()
+		{
 
-        public void WorkItem()
-        {
+			Configuration.Logger.Log(LogType.Verbose, $"Starting {this}");
 
-            Configuration.Logger.Log(LogType.Verbose, $"Starting {this}");
+			Configuration.StopSignal += Configuration_StopSignal;
 
-            Configuration.StopSignal += Configuration_StopSignal;
+			Host = new NancyHost(new Uri(ServerUri));
+			Host.Start();
 
-            Host = new NancyHost(new Uri(ServerUri));
-            Host.Start();
-
-        }
-    }
+		}
+	}
 }

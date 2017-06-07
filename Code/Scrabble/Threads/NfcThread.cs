@@ -22,12 +22,10 @@ namespace Scrabble.Threads
 		readonly byte[] ProtocolSelectISO14443ACommand = { 0x02, 0x02, 0x02, 0x00 };
 		readonly byte[] ProtocolSelectISO14443BCommand = { 0x02, 0x02, 0x03, 0x01 };
 
-		public int DelayInMs;
 		bool _stopSignal;
 
 		public NfcThread()
 		{
-			DelayInMs = 1000;
 			_stopSignal = false;
 		}
 
@@ -135,6 +133,8 @@ namespace Scrabble.Threads
 			while (true)
 			{
 
+				Thread.Sleep(TimeSpan.FromMilliseconds(Configuration.Instance.ThreadDelayInMs));
+
 				if (_stopSignal)
 				{
 					Configuration.Logger.Log(LogType.Verbose, $"Stopping {this}");
@@ -170,23 +170,23 @@ namespace Scrabble.Threads
 					if (_SerialDataCheckThread.ThreadState != ThreadState.Running)
 						_SerialDataCheckThread.Start();
 
-					for (var i = 0; i < 5; i++)
+					for (var i = 0; i < 3; i++)
 					{
 						SerialDataWrite(EchoCommand);
-						Thread.Sleep(500);
+						Thread.Sleep(100);
 					}
 
 					SerialDataWrite(IdnCommand);
-					Thread.Sleep(1000);
+					Thread.Sleep(500);
 
 					SerialDataWrite(ProtocolSelectISO15693Command);
-					Thread.Sleep(1000);
+					Thread.Sleep(500);
 
 					SerialDataWrite(InventoryCommand);
-					Thread.Sleep(1000);
+					Thread.Sleep(500);
 
 					SerialDataWrite(FieldOffCommand);
-					Thread.Sleep(1000);
+					Thread.Sleep(500);
 
 					Console.WriteLine("Press any key to finish...");
 					Console.WriteLine();
@@ -200,8 +200,6 @@ namespace Scrabble.Threads
 				{
 					Configuration.Logger.Log(LogType.Error, $"{ex}");
 				}
-
-				Thread.Sleep(TimeSpan.FromMilliseconds(DelayInMs));
 
 			}
 

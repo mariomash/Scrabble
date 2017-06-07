@@ -7,13 +7,12 @@ namespace Scrabble.Threads
 	public class MonitorThread : BasicModule, IThread
 	{
 
-		public int DelayInMs, ForceExitEachHours;
+		public int ForceExitEachHours;
 		public string SnapshotFileName;
 		bool _stopSignal;
 
 		public MonitorThread()
 		{
-			DelayInMs = 1000;
 			ForceExitEachHours = 0;
 			SnapshotFileName = "snapshot.xml";
 			_stopSignal = false;
@@ -33,6 +32,9 @@ namespace Scrabble.Threads
 
 			while (true)
 			{
+
+				Thread.Sleep(TimeSpan.FromMilliseconds(Configuration.Instance.ThreadDelayInMs));
+
 				if (_stopSignal)
 				{
 					Configuration.Logger.Log(LogType.Verbose, $"Stopping {this}");
@@ -60,7 +62,6 @@ namespace Scrabble.Threads
 				{
 					Configuration.Logger.Log(LogType.Error, $"{ex}");
 				}
-				Thread.Sleep(TimeSpan.FromMilliseconds(DelayInMs));
 
 				i++;
 				if (i <= 10) continue;

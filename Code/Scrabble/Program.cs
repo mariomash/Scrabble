@@ -41,9 +41,7 @@ namespace Scrabble
 				});
 				}
 				else
-				{
 					Console.ReadLine();
-				}
 
 				Configuration.SendStopSignal();
 				Thread.Sleep(TimeSpan.FromSeconds(3));

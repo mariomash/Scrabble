@@ -20,12 +20,6 @@ namespace Scrabble.Config
 
 		static Configuration()
 		{
-			//    Instance.Logger = new Logger();
-			//    Instance.MonitorThread = new MonitorThread();
-			//    Instance.MpcThread = new MpcThread();
-			//    Instance.NfcThread = new NfcThread();
-			//    Instance.WebThread = new WebThread();
-
 
 			var utils = new Utils();
 
@@ -74,6 +68,7 @@ namespace Scrabble.Config
 
 			Instance.LastStartup = DateTime.Now;
 
+			Instance.ThreadDelayInMs = 500;
 
 		}
 
@@ -123,6 +118,8 @@ namespace Scrabble.Config
 		public DateTime LastStartup { get; private set; }
 
 		public bool UseSnapshot { get; set; }
+
+		public int ThreadDelayInMs { get; set; }
 
 		public MonitorThread MonitorThread { get; set; }
 

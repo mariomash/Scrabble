@@ -11,7 +11,7 @@ namespace Scrabble.Threads
 	public class MpcThread : BasicModule, IThread
 	{
 
-		public int ServerPort, DelayInMs;
+		public int ServerPort;
 		public string ServerAdress;
 		bool _stopSignal;
 
@@ -56,6 +56,9 @@ namespace Scrabble.Threads
 
 			while (true)
 			{
+
+				Thread.Sleep(TimeSpan.FromMilliseconds(Configuration.Instance.ThreadDelayInMs));
+
 				if (_stopSignal)
 				{
 					Configuration.Logger.Log(LogType.Verbose, $"Stopping {this}");
@@ -76,8 +79,6 @@ namespace Scrabble.Threads
 				{
 					Configuration.Logger.Log(LogType.Error, $"{ex}");
 				}
-
-				Thread.Sleep(TimeSpan.FromMilliseconds(DelayInMs));
 
 			}
 
