@@ -17,7 +17,8 @@ namespace Scrabble.Threads
 		readonly byte[] EchoCommand = { 0x55 };
 		readonly byte[] IdnCommand = { 0x01, 0x00 };
 		readonly byte[] FieldOffCommand = { 0x02, 0x02, 0x00, 0x00 };
-		readonly byte[] InventoryCommand = { 0x04, 0x03, 0x26, 0x01, 0x00 };
+		readonly byte[] InventoryCommandISO15693 = { 0x04, 0x03, 0x26, 0x01, 0x00 };
+		readonly byte[] InventoryCommandISO14443A = { 0x04, 0x02, 0x26, 0x07 };
 		readonly byte[] ProtocolSelectISO15693Command = { 0x02, 0x02, 0x01, 0x05 };
 		readonly byte[] ProtocolSelectISO14443ACommand = { 0x02, 0x02, 0x02, 0x00 };
 		readonly byte[] ProtocolSelectISO14443BCommand = { 0x02, 0x02, 0x03, 0x01 };
@@ -179,10 +180,10 @@ namespace Scrabble.Threads
 					SerialDataWrite(IdnCommand);
 					Thread.Sleep(500);
 
-					SerialDataWrite(ProtocolSelectISO15693Command);
+					SerialDataWrite(ProtocolSelectISO14443ACommand);
 					Thread.Sleep(500);
 
-					SerialDataWrite(InventoryCommand);
+					SerialDataWrite(InventoryCommandISO14443A);
 					Thread.Sleep(500);
 
 					SerialDataWrite(FieldOffCommand);
